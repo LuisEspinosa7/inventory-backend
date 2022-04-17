@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.entity;
+package com.lsoftware.inventory.role;
 
 import java.io.Serializable;
 
@@ -23,7 +23,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "roles")
-public class Rol implements Serializable {
+public class Role implements Serializable {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;

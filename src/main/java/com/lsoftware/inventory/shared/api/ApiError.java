@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.model;
+package com.lsoftware.inventory.shared.api;
 
 import java.time.LocalDateTime;
 

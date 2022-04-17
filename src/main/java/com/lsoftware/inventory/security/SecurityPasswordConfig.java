@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.config.security;
+package com.lsoftware.inventory.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author Luis Espinosa
  */
 @Configuration
-public class PasswordConfig {
+public class SecurityPasswordConfig {
 	
 	/**
 	 * Password encoder.

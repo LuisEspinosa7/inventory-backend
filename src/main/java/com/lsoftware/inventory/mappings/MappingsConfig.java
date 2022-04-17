@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.config.mappings;
+package com.lsoftware.inventory.mappings;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

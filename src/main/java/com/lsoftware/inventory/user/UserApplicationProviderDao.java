@@ -2,18 +2,16 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.dao.auth;
+package com.lsoftware.inventory.user;
 
 import java.util.Optional;
-
-import com.lsoftware.inventory.model.AppAuthenticationUser;
 
 /**
  * The Interface ApplicationUserDao.
  * 
  * @author Luis Espinosa
  */
-public interface ApplicationUserDao {
+public interface UserApplicationProviderDao {
 	
 	/**
 	 * Provide application user by username.
@@ -21,5 +19,5 @@ public interface ApplicationUserDao {
 	 * @param username the username
 	 * @return the optional
 	 */
-	Optional<AppAuthenticationUser> provideApplicationUserByUsername(String username);
+	Optional<UserAuthentication> provideApplicationUserByUsername(String username);
 }

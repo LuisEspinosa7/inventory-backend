@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.filters.jwt;
+package com.lsoftware.inventory.jwt;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -25,9 +25,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsoftware.inventory.config.jwt.JWTConfig;
-import com.lsoftware.inventory.model.ApiError;
-import com.lsoftware.inventory.model.UsernameAndPasswordAuthenticationRequest;
+import com.lsoftware.inventory.authentication.request.RequestAuthenticationData;
+import com.lsoftware.inventory.shared.api.ApiError;
 
 import io.jsonwebtoken.Jwts;
 
@@ -36,7 +35,7 @@ import io.jsonwebtoken.Jwts;
  * 
  * @author Luis Espinosa
  */
-public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
 	/** The authentication manager. */
 	private final AuthenticationManager authenticationManager;
@@ -59,7 +58,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
      * @param secretKey the secret key
      * @param objectMapper the object mapper
      */
-    public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager,
+    public JWTUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager,
                                                       JWTConfig jwtConfig,
                                                       SecretKey secretKey,
                                                       ObjectMapper objectMapper) {
@@ -82,8 +81,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                                                 HttpServletResponse response) throws AuthenticationException {
 
         try {
-            UsernameAndPasswordAuthenticationRequest authenticationRequest = new ObjectMapper()
-                    .readValue(request.getInputStream(), UsernameAndPasswordAuthenticationRequest.class);
+            RequestAuthenticationData authenticationRequest = new ObjectMapper()
+                    .readValue(request.getInputStream(), RequestAuthenticationData.class);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getUsername(),

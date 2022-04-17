@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.filters.jwt;
+package com.lsoftware.inventory.jwt;
 
 import java.io.IOException;
 
@@ -22,8 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.google.common.base.Strings;
-import com.lsoftware.inventory.authentication.GrantedAuthorityProvider;
-import com.lsoftware.inventory.config.jwt.JWTConfig;
+import com.lsoftware.inventory.authentication.authorities.AuthoritiesCustomProvider;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -35,10 +34,10 @@ import io.jsonwebtoken.Jwts;
  * 
  * @author Luis Espinosa
  */
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	
 	/** The log. */
-	private static Logger LOG = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
+	private static Logger LOG = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 	
 	/** The secret key. */
 	private final SecretKey secretKey;
@@ -47,7 +46,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	private final JWTConfig jwtConfig;
 	
 	/** The granted authority provider. */
-	private final GrantedAuthorityProvider grantedAuthorityProvider;
+	private final AuthoritiesCustomProvider grantedAuthorityProvider;
 
 	/**
 	 * Instantiates a new jwt authorization filter.
@@ -56,9 +55,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	 * @param jwtConfig the jwt config
 	 * @param grantedAuthorityProvider the granted authority provider
 	 */
-	public JwtAuthorizationFilter(SecretKey secretKey,
+	public JWTAuthorizationFilter(SecretKey secretKey,
 							JWTConfig jwtConfig,
-							GrantedAuthorityProvider grantedAuthorityProvider) {
+							AuthoritiesCustomProvider grantedAuthorityProvider) {
         this.secretKey = secretKey;
         this.jwtConfig = jwtConfig;
         this.grantedAuthorityProvider = grantedAuthorityProvider;

@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.dao.auth.impl;
+package com.lsoftware.inventory.user;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -15,33 +15,27 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 
-import com.lsoftware.inventory.dao.auth.ApplicationUserDao;
-import com.lsoftware.inventory.entity.User;
-import com.lsoftware.inventory.model.AppAuthenticationUser;
-import com.lsoftware.inventory.repository.UsuarioRepository;
-
 /**
- * The Class PostgresUserAuthenticationDao.
+ * The Class UserApplicationPostgresDao.
  * 
  * @author Luis Espinosa
  */
 @Repository("authPostgres")
-public class PostgresUserAuthenticationDao implements ApplicationUserDao {
+public class UserApplicationPostgresDao implements UserApplicationProviderDao {
 
 	/** The log. */
-	private static Logger LOG = LoggerFactory.getLogger(PostgresUserAuthenticationDao.class);
+	private static Logger LOG = LoggerFactory.getLogger(UserApplicationPostgresDao.class);
 
 
 	/** The usuario repository. */
-	private final UsuarioRepository usuarioRepository;
+	private final UserRepository usuarioRepository;
 
 	/**
 	 * Instantiates a new postgres user authentication dao.
 	 *
-	 * @param passwordEncoder the password encoder
 	 * @param usuarioRepository the usuario repository
 	 */
-	public PostgresUserAuthenticationDao(UsuarioRepository usuarioRepository) {
+	public UserApplicationPostgresDao(UserRepository usuarioRepository) {
 		this.usuarioRepository = usuarioRepository;
 	}
 
@@ -52,7 +46,7 @@ public class PostgresUserAuthenticationDao implements ApplicationUserDao {
 	 * @return the optional
 	 */
 	@Override
-	public Optional<AppAuthenticationUser> provideApplicationUserByUsername(String username) {
+	public Optional<UserAuthentication> provideApplicationUserByUsername(String username) {
 		LOG.info("method: provideApplicationUserByUsername");
 		
 		Optional<User> applicationUser = usuarioRepository.findByUsername(username);
@@ -64,7 +58,7 @@ public class PostgresUserAuthenticationDao implements ApplicationUserDao {
 			.map(rol -> authorities.add(new SimpleGrantedAuthority(rol.getName())))
 			.collect(Collectors.toSet());
 		
-		return Optional.of(new AppAuthenticationUser(username, 
+		return Optional.of(new UserAuthentication(username, 
 				applicationUser.get().getPassword(), authorities,
 				true, true, true, true));
 	}

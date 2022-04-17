@@ -2,14 +2,14 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.model;
+package com.lsoftware.inventory.authentication.request;
 
 /**
  * The Class UsernameAndPasswordAuthenticationRequest.
  * 
  * @author Luis Espinosa
  */
-public class UsernameAndPasswordAuthenticationRequest {
+public class RequestAuthenticationData {
 
 	/** The username. */
 	private String username;
@@ -20,7 +20,7 @@ public class UsernameAndPasswordAuthenticationRequest {
 	/**
 	 * Instantiates a new username and password authentication request.
 	 */
-	public UsernameAndPasswordAuthenticationRequest() {
+	public RequestAuthenticationData() {
 	}
 
 	/**

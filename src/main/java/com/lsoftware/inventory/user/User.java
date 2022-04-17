@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.entity;
+package com.lsoftware.inventory.user;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lsoftware.inventory.role.Role;
 
 import lombok.Data;
 
@@ -75,6 +76,6 @@ public class User implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "permissions", joinColumns = { @JoinColumn(name = "use_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "role_id") })
-	private Set<Rol> roles = new HashSet<Rol>();
+	private Set<Role> roles = new HashSet<Role>();
 
 }

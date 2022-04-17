@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.config.jwt;
+package com.lsoftware.inventory.jwt;
 
 import javax.crypto.SecretKey;
 
@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Configuration;
 import io.jsonwebtoken.security.Keys;
 
 /**
- * The Class JWTSecretKey.
+ * The Class JWTSecretKeyConfig.
  * 
  * @author Luis Espinosa
  */
 @Configuration
-public class JWTSecretKey { 
+public class JWTSecretKeyConfig { 
 	
 	/** The jwt config. */
 	private final JWTConfig jwtConfig;
@@ -27,7 +27,7 @@ public class JWTSecretKey {
      *
      * @param jwtConfig the jwt config
      */
-    public JWTSecretKey(JWTConfig jwtConfig) {
+    public JWTSecretKeyConfig(JWTConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
     }
 

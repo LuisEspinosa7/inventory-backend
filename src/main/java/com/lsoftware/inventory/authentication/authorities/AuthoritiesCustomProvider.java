@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.authentication;
+package com.lsoftware.inventory.authentication.authorities;
 
 import java.util.Set;
 
@@ -15,7 +15,7 @@ import io.jsonwebtoken.Claims;
  * 
  * @author Luis Espinosa
  */
-public interface GrantedAuthorityProvider {
+public interface AuthoritiesCustomProvider {
 	
 	/**
 	 * Provide granted authorities.

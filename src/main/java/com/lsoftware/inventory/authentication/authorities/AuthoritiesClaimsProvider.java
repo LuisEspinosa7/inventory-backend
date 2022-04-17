@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.authentication.impl;
+package com.lsoftware.inventory.authentication.authorities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.lsoftware.inventory.authentication.GrantedAuthorityProvider;
-
 import io.jsonwebtoken.Claims;
 
 /**
@@ -25,10 +23,10 @@ import io.jsonwebtoken.Claims;
  * @author Luis Espinosa
  */
 @Component
-public class ClaimsGrantedAuthorityImpl implements GrantedAuthorityProvider {
+public class AuthoritiesClaimsProvider implements AuthoritiesCustomProvider {
 	
 	/** The log. */
-	private static Logger LOG = LoggerFactory.getLogger(ClaimsGrantedAuthorityImpl.class);
+	private static Logger LOG = LoggerFactory.getLogger(AuthoritiesClaimsProvider.class);
 
 	/**
 	 * Provide granted authorities.

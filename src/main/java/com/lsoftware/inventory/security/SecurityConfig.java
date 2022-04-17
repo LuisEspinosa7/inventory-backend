@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.config.security;
+package com.lsoftware.inventory.security;
 
 import javax.crypto.SecretKey;
 
@@ -19,11 +19,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsoftware.inventory.authentication.GrantedAuthorityProvider;
-import com.lsoftware.inventory.authentication.impl.AppUserDetailsService;
-import com.lsoftware.inventory.config.jwt.JWTConfig;
-import com.lsoftware.inventory.filters.jwt.JwtAuthorizationFilter;
-import com.lsoftware.inventory.filters.jwt.JwtUsernameAndPasswordAuthenticationFilter;
+import com.lsoftware.inventory.authentication.authorities.AuthoritiesCustomProvider;
+import com.lsoftware.inventory.jwt.JWTAuthorizationFilter;
+import com.lsoftware.inventory.jwt.JWTConfig;
+import com.lsoftware.inventory.jwt.JWTUsernameAndPasswordAuthenticationFilter;
+import com.lsoftware.inventory.user.UserDetailsCustomService;
 
 /**
  * The Class SecurityConfig.
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final PasswordEncoder passwordEncoder;
     
     /** The app user details service. */
-    private final AppUserDetailsService appUserDetailsService;
+    private final UserDetailsCustomService appUserDetailsService;
     
     /** The secret key. */
     private final SecretKey secretKey;
@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     
     /** The granted authority provider. */
-    GrantedAuthorityProvider grantedAuthorityProvider;
+    AuthoritiesCustomProvider grantedAuthorityProvider;
 
     /**
      * Instantiates a new security config.
@@ -64,11 +64,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @param grantedAuthorityProvider the granted authority provider
      */
     public SecurityConfig(PasswordEncoder passwordEncoder,
-    						AppUserDetailsService appUserDetailsService,
+    						UserDetailsCustomService appUserDetailsService,
                             SecretKey secretKey,
                             JWTConfig jwtConfig,
                             ObjectMapper objectMapper,
-                            GrantedAuthorityProvider grantedAuthorityProvider) {
+                            AuthoritiesCustomProvider grantedAuthorityProvider) {
         this.passwordEncoder = passwordEncoder;
         this.appUserDetailsService = appUserDetailsService;
         this.secretKey = secretKey;
@@ -95,8 +95,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.anyRequest()
 		.authenticated()
 		.and()
-		.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey, objectMapper))
-		.addFilterAfter(new JwtAuthorizationFilter(secretKey, jwtConfig, grantedAuthorityProvider), JwtUsernameAndPasswordAuthenticationFilter.class)
+		.addFilter(new JWTUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey, objectMapper))
+		.addFilterAfter(new JWTAuthorizationFilter(secretKey, jwtConfig, grantedAuthorityProvider), JWTUsernameAndPasswordAuthenticationFilter.class)
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

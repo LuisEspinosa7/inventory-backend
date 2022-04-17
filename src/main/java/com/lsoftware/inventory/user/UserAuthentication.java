@@ -2,7 +2,7 @@
  * Developed by: Luis Espinosa, be aware that this project
  * is part of my personal portfolio.
  */
-package com.lsoftware.inventory.model;
+package com.lsoftware.inventory.user;
 
 import java.util.Collection;
 import java.util.Set;
@@ -11,11 +11,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * The Class AppAuthenticationUser.
+ * The Class UserAuthentication.
  * 
  * @author Luis Espinosa
  */
-public class AppAuthenticationUser implements UserDetails {
+public class UserAuthentication implements UserDetails {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 443807688123839270L;
@@ -52,7 +52,7 @@ public class AppAuthenticationUser implements UserDetails {
 	 * @param isCredentialsNonExpired the is credentials non expired
 	 * @param isEnabled the is enabled
 	 */
-	public AppAuthenticationUser(String username, String password, Set<? extends GrantedAuthority> grantedAuthorities,
+	public UserAuthentication(String username, String password, Set<? extends GrantedAuthority> grantedAuthorities,
 			boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired,
 			boolean isEnabled) {
 		this.username = username;

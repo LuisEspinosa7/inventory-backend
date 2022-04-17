@@ -1,4 +1,4 @@
-package com.lsoftware.inventory.controller;
+package com.lsoftware.inventory.user;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

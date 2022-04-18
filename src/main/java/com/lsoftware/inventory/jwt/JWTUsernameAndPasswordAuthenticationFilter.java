@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsoftware.inventory.authentication.request.RequestAuthenticationData;
+import com.lsoftware.inventory.mappings.MappingsCustom;
 import com.lsoftware.inventory.shared.api.ApiError;
 
 import io.jsonwebtoken.Jwts;
@@ -47,8 +49,10 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     private final SecretKey secretKey;
     
     /** The object mapper. */
-    private final ObjectMapper objectMapper;
+    private final MappingsCustom mappingsCustom;
 
+    /** The object mapper. */
+    private final ObjectMapper objectMapper;
     
     /**
      * Instantiates a new jwt username and password authentication filter.
@@ -56,15 +60,17 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
      * @param authenticationManager the authentication manager
      * @param jwtConfig the jwt config
      * @param secretKey the secret key
-     * @param objectMapper the object mapper
+     * @param MappingsCustom the object mapper
      */
     public JWTUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager,
                                                       JWTConfig jwtConfig,
                                                       SecretKey secretKey,
+                                                      MappingsCustom mappingsCustom,
                                                       ObjectMapper objectMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
         this.secretKey = secretKey;
+        this.mappingsCustom = mappingsCustom;
         this.objectMapper = objectMapper;
     }
 
@@ -81,7 +87,7 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                                                 HttpServletResponse response) throws AuthenticationException {
 
         try {
-            RequestAuthenticationData authenticationRequest = new ObjectMapper()
+            RequestAuthenticationData authenticationRequest = mappingsCustom
                     .readValue(request.getInputStream(), RequestAuthenticationData.class);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -91,8 +97,8 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
             return authenticationManager.authenticate(authentication); // returns Authentication
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new AccessDeniedException(e.getMessage());
         }
 
     }

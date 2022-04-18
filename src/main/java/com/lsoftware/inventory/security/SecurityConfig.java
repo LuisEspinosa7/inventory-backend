@@ -23,6 +23,7 @@ import com.lsoftware.inventory.authentication.authorities.AuthoritiesCustomProvi
 import com.lsoftware.inventory.jwt.JWTAuthorizationFilter;
 import com.lsoftware.inventory.jwt.JWTConfig;
 import com.lsoftware.inventory.jwt.JWTUsernameAndPasswordAuthenticationFilter;
+import com.lsoftware.inventory.mappings.MappingsCustom;
 import com.lsoftware.inventory.user.UserDetailsCustomService;
 
 /**
@@ -50,6 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /** The object mapper. */
     private final ObjectMapper objectMapper;
     
+    /** The mappings custom. */
+    private final MappingsCustom mappingsCustom;
+    
     /** The granted authority provider. */
     AuthoritiesCustomProvider grantedAuthorityProvider;
 
@@ -68,12 +72,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             SecretKey secretKey,
                             JWTConfig jwtConfig,
                             ObjectMapper objectMapper,
+                            MappingsCustom mappingsCustom,
                             AuthoritiesCustomProvider grantedAuthorityProvider) {
         this.passwordEncoder = passwordEncoder;
         this.appUserDetailsService = appUserDetailsService;
         this.secretKey = secretKey;
         this.jwtConfig = jwtConfig;
         this.objectMapper = objectMapper;
+        this.mappingsCustom = mappingsCustom;
         this.grantedAuthorityProvider = grantedAuthorityProvider;
     }
 
@@ -95,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.anyRequest()
 		.authenticated()
 		.and()
-		.addFilter(new JWTUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey, objectMapper))
+		.addFilter(new JWTUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey, mappingsCustom, objectMapper))
 		.addFilterAfter(new JWTAuthorizationFilter(secretKey, jwtConfig, grantedAuthorityProvider), JWTUsernameAndPasswordAuthenticationFilter.class)
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

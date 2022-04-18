@@ -4,11 +4,17 @@
  */
 package com.lsoftware.inventory.authentication.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+
 /**
  * The Class UsernameAndPasswordAuthenticationRequest.
  * 
  * @author Luis Espinosa
  */
+@Data
+@AllArgsConstructor
 public class RequestAuthenticationData {
 
 	/** The username. */

@@ -132,7 +132,11 @@ class JWTUsernameAndPasswordAuthenticationFilterTest {
 	@Test
 	void itShouldAttemptAuthenticationSuccessfull() throws IOException {
 		
-		when(mappingsCustom.readValue(any(), any())).thenReturn(new RequestAuthenticationData());
+		RequestAuthenticationData request = new RequestAuthenticationData();
+		request.setUsername("luis3");
+		request.setPassword("123456");
+		
+		when(mappingsCustom.readValue(any(), any())).thenReturn(request);
 		
 		BDDMockito.given(authenticationManager.authenticate(any())).willReturn(new TemporalAuthorization());
 		

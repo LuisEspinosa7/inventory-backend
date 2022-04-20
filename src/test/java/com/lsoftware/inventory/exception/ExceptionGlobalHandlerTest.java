@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
-import com.lsoftware.inventory.shared.api.ApiError;
+import com.lsoftware.inventory.shared.api.ApiCustomResponse;
 
 /**
  * The Class ExceptionGlobalHandlerTest.
@@ -42,7 +42,7 @@ class ExceptionGlobalHandlerTest {
 	 */
 	@Test
 	void isShouldJoinAccessDeniedException() {
-		ResponseEntity<ApiError> response = underTest.accessDeniedException(new AccessDeniedException("dummy"));
+		ResponseEntity<ApiCustomResponse> response = underTest.accessDeniedException(new AccessDeniedException("dummy"));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 	}
 

@@ -4,6 +4,7 @@
  */
 package com.lsoftware.inventory.mappings;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,5 +30,16 @@ public class MappingsConfig {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 		return objectMapper;
+	}
+	
+	
+	/**
+	 * Model mapper.
+	 *
+	 * @return the model mapper
+	 */
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
 	}
 }

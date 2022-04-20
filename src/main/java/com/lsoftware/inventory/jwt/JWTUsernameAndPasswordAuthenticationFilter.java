@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lsoftware.inventory.authentication.request.RequestAuthenticationData;
 import com.lsoftware.inventory.mappings.MappingsCustom;
-import com.lsoftware.inventory.shared.api.ApiError;
+import com.lsoftware.inventory.shared.api.ApiCustomResponse;
 
 import io.jsonwebtoken.Jwts;
 
@@ -152,8 +152,7 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		SecurityContextHolder.clearContext();
 		response.setContentType("application/json; charset=UTF-8");
 		
-		ApiError error = new ApiError.ApiErrorBuilder(Integer.valueOf(HttpStatus.FORBIDDEN.toString().split(" ")[0]))
-				.error(HttpStatus.FORBIDDEN.name())
+		ApiCustomResponse error = new ApiCustomResponse.ApiResponseBuilder(Integer.valueOf(HttpStatus.FORBIDDEN.toString().split(" ")[0]))
 				.message(failed.getMessage())
 				.path("")
 				.build();

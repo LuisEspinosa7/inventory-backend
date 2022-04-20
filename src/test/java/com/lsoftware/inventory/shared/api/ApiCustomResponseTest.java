@@ -14,22 +14,21 @@ import org.springframework.http.HttpStatus;
  * 
  * @author Luis Espinosa
  */
-class ApiErrorTest {
+class ApiCustomResponseTest {
 
 	/**
 	 * It S hould configure api error.
 	 */
 	@Test
 	void itSHouldConfigureApiError() {
-		ApiError error = new ApiError.ApiErrorBuilder(Integer.valueOf(HttpStatus.FORBIDDEN.toString().split(" ")[0]))
-				.error(HttpStatus.FORBIDDEN.name()).message("Access Denied").path("").build();
+		ApiCustomResponse error = new ApiCustomResponse.ApiResponseBuilder(Integer.valueOf(HttpStatus.FORBIDDEN.toString().split(" ")[0]))
+				.message(HttpStatus.FORBIDDEN.name()).path("").build();
 		
 		assertThat(error.getStatus()).isEqualTo(403);
 		
-		assertThat(error.getMessage()).isEqualTo("Access Denied");
+		assertThat(error.getMessage()).isEqualTo(HttpStatus.FORBIDDEN.name());
 		assertThat(error.getPath()).isEqualTo("");
 		assertThat(error.getTimestamp()).isNotNull();
-		assertThat(error.getError()).isEqualTo(HttpStatus.FORBIDDEN.name());
 	}
 
 }

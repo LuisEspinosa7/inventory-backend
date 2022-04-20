@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.lsoftware.inventory.shared.api.ApiError;
+import com.lsoftware.inventory.shared.api.ApiCustomResponse;
 
 /**
  * The Class GlobalExceptionHandler.
@@ -34,12 +34,12 @@ public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
 	 * @return the response entity
 	 */
 	@ExceptionHandler(AccessDeniedException.class)
-	public final ResponseEntity<ApiError> accessDeniedException(AccessDeniedException ex) {
+	public final ResponseEntity<ApiCustomResponse> accessDeniedException(AccessDeniedException ex) {
 		
 		HttpStatus httpStatus = HttpStatus.FORBIDDEN;
 
-		ApiError error = new ApiError.ApiErrorBuilder(Integer.valueOf(httpStatus.toString().split(" ")[0]))
-				.error(httpStatus.name()).message("Access Denied").path("").build();
+		ApiCustomResponse error = new ApiCustomResponse.ApiResponseBuilder(Integer.valueOf(httpStatus.toString().split(" ")[0]))
+				.message(httpStatus.name()).path("").build();
 
 		return new ResponseEntity<>(error, httpStatus);
 	}

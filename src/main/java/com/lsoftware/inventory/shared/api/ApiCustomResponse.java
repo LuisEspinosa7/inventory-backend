@@ -5,13 +5,14 @@
 package com.lsoftware.inventory.shared.api;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * Instantiates a new api error builder.
  * 
  * @author Luis Espinosa
  */
-public class ApiError {
+public class ApiCustomResponse {
 
 	/** The timestamp. */
 	private final String timestamp;
@@ -19,26 +20,30 @@ public class ApiError {
 	/** The status. */
 	private final int status;
 
-	/** The error. */
-	private final String error;
-
 	/** The message. */
 	private final String message;
 
 	/** The path. */
 	private final String path;
+	
+	/** The data. */
+	private final Object data;
+	
+	/** The validation errors. */
+	private Map<String, String> validationErrors;
 
 	/**
 	 * Instantiates a new api error.
 	 *
 	 * @param builder the builder
 	 */
-	private ApiError(ApiErrorBuilder builder) {
+	private ApiCustomResponse(ApiResponseBuilder builder) {
 		this.timestamp = String.valueOf(LocalDateTime.now());
 		this.status = builder.status;
-		this.error = builder.error;
 		this.message = builder.message;
 		this.path = builder.path;
+		this.data = builder.data;
+		this.validationErrors = builder.validationErrors;
 	}
 
 	/**
@@ -60,15 +65,6 @@ public class ApiError {
 	}
 
 	/**
-	 * Gets the error.
-	 *
-	 * @return the error
-	 */
-	public String getError() {
-		return error;
-	}
-
-	/**
 	 * Gets the message.
 	 *
 	 * @return the message
@@ -85,42 +81,52 @@ public class ApiError {
 	public String getPath() {
 		return path;
 	}
+	
+	/**
+	 * Gets the data.
+	 *
+	 * @return the data
+	 */
+	public Object getData() {
+		return data;
+	}
+	
+	/**
+	 * Gets the validation errors.
+	 *
+	 * @return the validation errors
+	 */
+	public Map<String, String> getValidationErrors() {
+		return validationErrors;
+	}
 
 	/**
 	 * The Class ApiErrorBuilder.
 	 */
-	public static class ApiErrorBuilder {
+	public static class ApiResponseBuilder {
 		
 		/** The status. */
 		private final int status;
-		
-		/** The error. */
-		private String error;
 		
 		/** The message. */
 		private String message;
 		
 		/** The path. */
 		private String path;
+		
+		/** The data. */
+		private Object data;
+		
+		/** The validation errors. */
+		private Map<String, String> validationErrors;
 
 		/**
 		 * Instantiates a new api error builder.
 		 *
 		 * @param status the status
 		 */
-		public ApiErrorBuilder(int status) {
+		public ApiResponseBuilder(int status) {
 			this.status = status;
-		}
-
-		/**
-		 * Error.
-		 *
-		 * @param error the error
-		 * @return the api error builder
-		 */
-		public ApiErrorBuilder error(String error) {
-			this.error = error;
-			return this;
 		}
 
 		/**
@@ -129,7 +135,7 @@ public class ApiError {
 		 * @param message the message
 		 * @return the api error builder
 		 */
-		public ApiErrorBuilder message(String message) {
+		public ApiResponseBuilder message(String message) {
 			this.message = message;
 			return this;
 		}
@@ -140,8 +146,30 @@ public class ApiError {
 		 * @param path the path
 		 * @return the api error builder
 		 */
-		public ApiErrorBuilder path(String path) {
+		public ApiResponseBuilder path(String path) {
 			this.path = path;
+			return this;
+		}
+		
+		/**
+		 * Data.
+		 *
+		 * @param data the data
+		 * @return the api response builder
+		 */
+		public ApiResponseBuilder data(Object data) {
+			this.data = data;
+			return this;
+		}
+		
+		/**
+		 * Data.
+		 *
+		 * @param validationErrors the validation errors
+		 * @return the api response builder
+		 */
+		public ApiResponseBuilder data(Map<String, String> validationErrors) {
+			this.validationErrors = validationErrors;
 			return this;
 		}
 
@@ -150,8 +178,8 @@ public class ApiError {
 		 *
 		 * @return the api error
 		 */
-		public ApiError build() {
-			ApiError user = new ApiError(this);
+		public ApiCustomResponse build() {
+			ApiCustomResponse user = new ApiCustomResponse(this);
 			return user;
 		}
 

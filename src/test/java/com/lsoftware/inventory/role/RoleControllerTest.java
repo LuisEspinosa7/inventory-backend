@@ -84,8 +84,8 @@ class RoleControllerTest {
         	.andReturn();
 		
 		
-		 String resultSS = result.getResponse().getContentAsString();
-	     assertThat(resultSS).isNotNull();	
+		 String response = result.getResponse().getContentAsString();
+	     assertThat(response).isNotNull();	
 	}
 	
 	

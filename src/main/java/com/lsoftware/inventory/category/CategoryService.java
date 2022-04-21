@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lsoftware.inventory.exception.ExceptionObjectNotFound;
 import com.lsoftware.inventory.exception.ExceptionValueNotPermitted;
-import com.lsoftware.inventory.exception.InternalServerErrorException;
+import com.lsoftware.inventory.exception.ExceptionInternalServerError;
 import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
 import com.lsoftware.inventory.shared.service.ServiceListMethods;
@@ -73,15 +73,16 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	public CategoryDTO add(CategoryDTO obj) {
 		LOG.info("method: add");
 		
-		Optional<Category> search = categoryRepository.findByNameAndStatus(obj.getName(), Status.ACTIVE.getDigit());
+		Optional<Category> search = categoryRepository.findByNameAndStatus(obj.getName().toUpperCase(), Status.ACTIVE.getDigit());
 		
 		if (search.isPresent()) throw new ExceptionValueNotPermitted(
 					messageSource.getMessage("error.alreadyExist", new String[] {"Category"}, LocaleContextHolder.getLocale())
 			);
 		
 		Category category = modelMapper.map(obj, Category.class);
-		// Setters
+		
 		category.setName(category.getName().toUpperCase());
+		category.setStatus(Status.ACTIVE.getDigit());
 		
 		Category saved = categoryRepository.save(category);
 		return modelMapper.map(saved, CategoryDTO.class);
@@ -132,7 +133,7 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 				));
 		
 		int result = categoryRepository.setStatusById(Status.DELETED.getDigit(), category.get().getId());
-		if (result < 1) throw new InternalServerErrorException(
+		if (result < 1) throw new ExceptionInternalServerError(
 				messageSource.getMessage("error.notDeleted", new String[] {"Category"}, LocaleContextHolder.getLocale()));
 	}
 

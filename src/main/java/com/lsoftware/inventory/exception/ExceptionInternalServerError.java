@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author Luis Espinosa
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-public class InternalServerErrorException extends RuntimeException {
+public class ExceptionInternalServerError extends RuntimeException {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -990795612962216707L;
@@ -23,7 +23,7 @@ public class InternalServerErrorException extends RuntimeException {
 	 *
 	 * @param exception the exception
 	 */
-	public InternalServerErrorException(String exception) {
+	public ExceptionInternalServerError(String exception) {
 		super(exception);
 	}
 

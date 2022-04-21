@@ -42,7 +42,7 @@ class ExceptionGlobalHandlerTest {
 	 */
 	@Test
 	void isShouldJoinAccessDeniedException() {
-		ResponseEntity<ApiCustomResponse> response = underTest.accessDeniedException(new AccessDeniedException("dummy"));
+		ResponseEntity<ApiCustomResponse> response = underTest.handleAccessDeniedException(new AccessDeniedException("dummy"));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 	}
 

@@ -22,11 +22,11 @@ public class RequestPaginationAndSortDTO {
 	private String searchTerm;
 
 	/** The page. */
-	@NotNull(message = "{pagination.page.NotNull}")
+	@NotNull(message = "Page {error.NotNull}")
 	private int page;
 
 	/** The size. */
-	@NotNull(message = "{pagination.size.NotNull}")
+	@NotNull(message = "Size {error.NotNull}")
 	private int size;
 
 	/**

@@ -168,7 +168,7 @@ public class ApiCustomResponse {
 		 * @param validationErrors the validation errors
 		 * @return the api response builder
 		 */
-		public ApiResponseBuilder data(Map<String, String> validationErrors) {
+		public ApiResponseBuilder validationErrors(Map<String, String> validationErrors) {
 			this.validationErrors = validationErrors;
 			return this;
 		}

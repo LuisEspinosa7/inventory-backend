@@ -73,7 +73,9 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	public CategoryDTO add(CategoryDTO obj) {
 		LOG.info("method: add");
 		
-		Optional<Category> search = categoryRepository.findByNameAndStatus(obj.getName().toUpperCase(), Status.ACTIVE.getDigit());
+		Optional<Category> search = 
+				categoryRepository.findByNameAndStatus(obj.getName().toUpperCase(), 
+						Status.ACTIVE.getDigit());
 		
 		if (search.isPresent()) throw new ExceptionValueNotPermitted(
 					messageSource.getMessage("error.alreadyExist", new String[] {"Category"}, LocaleContextHolder.getLocale())
@@ -94,6 +96,7 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	 * @param obj the obj
 	 * @return the category DTO
 	 */
+	@Transactional
 	@Override
 	public CategoryDTO update(CategoryDTO obj) {
 		LOG.info("method: update");

@@ -65,7 +65,7 @@ public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
 	 * @return the response entity
 	 */
 	@ExceptionHandler(ExceptionInternalServerError.class)
-	public final ResponseEntity<Object> handleInternalServerErrorException(ExceptionInternalServerError ex) {
+	public final ResponseEntity<ApiCustomResponse> handleInternalServerErrorException(ExceptionInternalServerError ex) {
 		LOG.error("method: handleInternalServerErrorException");
 		
 		HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -84,7 +84,7 @@ public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
 	 * @return the response entity
 	 */
 	@ExceptionHandler(ExceptionValueNotPermitted.class)
-	public final ResponseEntity<Object> handleValueNotPermittedException(ExceptionValueNotPermitted ex) {
+	public final ResponseEntity<ApiCustomResponse> handleValueNotPermittedException(ExceptionValueNotPermitted ex) {
 		LOG.error("method: handleValueNotPermittedException");
 		
 		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
@@ -102,7 +102,7 @@ public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
 	 * @return the response entity
 	 */
 	@ExceptionHandler(ExceptionObjectNotFound.class)
-	public final ResponseEntity<Object> handleObjectNotFoundException(ExceptionObjectNotFound ex) {
+	public final ResponseEntity<ApiCustomResponse> handleObjectNotFoundException(ExceptionObjectNotFound ex) {
 		LOG.error("method: handleObjectNotFoundException");
 		
 		HttpStatus httpStatus = HttpStatus.NOT_FOUND;
@@ -120,7 +120,7 @@ public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
 	 * @return the response entity
 	 */
 	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<Object> handleAllExceptions(Exception e) {
+	public final ResponseEntity<ApiCustomResponse> handleAllExceptions(Exception e) {
 		LOG.error("method: handleAllExceptions");
 		
 		HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

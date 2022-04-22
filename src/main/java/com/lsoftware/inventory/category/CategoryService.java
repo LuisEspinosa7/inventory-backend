@@ -149,7 +149,7 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	public List<CategoryDTO> list() {
 		LOG.info("method: list");
 		
-		List<CategoryDTO> categories = categoryRepository.findAll()
+		List<CategoryDTO> categories = categoryRepository.findByStatus(Status.ACTIVE.getDigit())
 				.stream()
 				.map(c -> modelMapper.map(c, CategoryDTO.class))
 				.collect(Collectors.toList());
@@ -168,7 +168,7 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 		LOG.info("method: findAll");
 		
 		Page<Category> results = categoryRepository
-				.findAll(PageRequest.of(pageAndSort.getPage(), pageAndSort.getSize()));
+				.findByStatus(Status.ACTIVE.getDigit(), PageRequest.of(pageAndSort.getPage(), pageAndSort.getSize()));
 		
 		List<CategoryDTO> mapped = results.getContent()
 			.stream()

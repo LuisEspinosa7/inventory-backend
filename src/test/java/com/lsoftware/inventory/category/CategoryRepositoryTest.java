@@ -92,5 +92,36 @@ class CategoryRepositoryTest {
 		assertThat(result.getContent().isEmpty()).isFalse();
 		assertThat(result.getContent().size()).isEqualTo(1);
 	}
+	
+	/**
+	 * It should find by status.
+	 */
+	@Test
+	void itShouldFindByStatus() {
+		
+		underTest.save(new Category(1L, "CATEGORY1", Status.ACTIVE.getDigit()));
+		underTest.save(new Category(2L, "CATEGORY2", Status.ACTIVE.getDigit()));
+		
+		List<Category> results = underTest.findByStatus(Status.ACTIVE.getDigit());
+		assertThat(results.size()).isEqualTo(2);
+	}
+	
+	/**
+	 * It should find by status pageable.
+	 */
+	@Test
+	void itShouldFindByStatusPageable() {
+		
+		underTest.save(new Category(1L, "CATEGORY1", Status.ACTIVE.getDigit()));
+		underTest.save(new Category(2L, "CATEGORY2", Status.ACTIVE.getDigit()));
+		underTest.save(new Category(3L, "CATEGORY3", Status.ACTIVE.getDigit()));
+		underTest.save(new Category(4L, "CATEGORY4", Status.ACTIVE.getDigit()));
+		underTest.save(new Category(5L, "CATEGORY5", Status.DELETED.getDigit()));
+		
+		Page<Category> results = underTest.findByStatus(Status.ACTIVE.getDigit(),
+				PageRequest.of(0, 2));
+		assertThat(results.get().count()).isEqualTo(2);
+	}
+
 
 }

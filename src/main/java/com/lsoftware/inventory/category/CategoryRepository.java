@@ -61,4 +61,21 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 	@Query("update Category c SET c.status =:status WHERE c.id =:id")
 	int setStatusById(@Param("status") Integer status, @Param("id") Long id);
 
+	
+	/**
+	 * Find by status.
+	 *
+	 * @param status the status
+	 * @return the list
+	 */
+	List<Category> findByStatus(Integer status);
+	
+	/**
+	 * Find by status.
+	 *
+	 * @param status the status
+	 * @param pageable the pageable
+	 * @return the page
+	 */
+	Page<Category> findByStatus(Integer status, Pageable pageable);
 }

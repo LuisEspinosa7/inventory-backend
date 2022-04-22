@@ -108,8 +108,7 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 		);
 		
 		Category foundObj = categoryById.get();
-		foundObj.setName(obj.getName());
-		foundObj.setStatus(obj.getStatus());
+		foundObj.setName(obj.getName().toUpperCase());
 		
 		Category saved = categoryRepository.save(foundObj);
 		return modelMapper.map(saved, CategoryDTO.class);

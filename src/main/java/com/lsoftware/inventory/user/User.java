@@ -24,7 +24,9 @@ import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lsoftware.inventory.role.Role;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -33,6 +35,8 @@ import lombok.Data;
  * @author Luis Espinosa
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -63,7 +67,7 @@ public class User implements Serializable {
 
 	/** The username. */
 	@NotBlank
-	@Column(name = "use_username")
+	@Column(name = "use_username", unique = true)
 	private String username;
 
 	/** The password. */
@@ -71,6 +75,10 @@ public class User implements Serializable {
 	@NotBlank
 	@Column(name = "use_password")
 	private String password;
+	
+	/** The status. */
+	@Column(name = "use_status")
+	private int status;
 
 	/** The roles. */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })

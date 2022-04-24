@@ -4,6 +4,7 @@
  */
 package com.lsoftware.inventory.shared.status;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Enum Status.
  * 
@@ -15,7 +16,10 @@ public enum Status {
 	DELETED(0, "It represents that the entity was deleted"),
 	
 	/** The active. */
-	ACTIVE(1, "It represents that the entity is still active");
+	ACTIVE(1, "It represents that the entity is still active"),
+	
+	/** The inactive. */
+	INACTIVE(2, "It represents that the entity is inactive");
 
 	/** The digit. */
 	private int digit;

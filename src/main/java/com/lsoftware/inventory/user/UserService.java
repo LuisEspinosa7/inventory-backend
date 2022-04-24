@@ -112,7 +112,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		user.setStatus(Status.ACTIVE.getDigit());
 		
 		User saved = userRepository.save(user);
-		saved.setPassword("");
+		saved.setPassword("000");
 		return modelMapper.map(saved, UserDTO.class);
 	}
 
@@ -153,7 +153,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		foundObj.setRoles(filtered);
 		
 		User saved = userRepository.save(foundObj);
-		saved.setPassword("");
+		saved.setPassword("000");
 		return modelMapper.map(saved, UserDTO.class);
 	}
 

@@ -15,9 +15,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.lsoftware.inventory.authentication.AuthenticationHolderProvider;
 import com.lsoftware.inventory.exception.ExceptionInternalServerError;
 import com.lsoftware.inventory.exception.ExceptionObjectNotFound;
 import com.lsoftware.inventory.exception.ExceptionValueNotPermitted;
@@ -25,6 +28,7 @@ import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
 import com.lsoftware.inventory.shared.service.ServiceMethods;
 import com.lsoftware.inventory.shared.service.ServicePaginatedMethods;
+import com.lsoftware.inventory.shared.service.ServiceUserPasswordChangeMethods;
 import com.lsoftware.inventory.shared.status.Status;
 
 /**
@@ -33,7 +37,7 @@ import com.lsoftware.inventory.shared.status.Status;
  * @author Luis Espinosa
  */
 @Service
-public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMethods<UserDTO> {
+public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMethods<UserDTO>, ServiceUserPasswordChangeMethods {
 
 	/** The Constant LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
@@ -50,6 +54,9 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 	/** The password encoder. */
 	private PasswordEncoder passwordEncoder;
 	
+	/** The authentication custom holder provider. */
+	private AuthenticationHolderProvider authenticationHolderProvider;
+	
 	
 	/**
 	 * Instantiates a new user service.
@@ -61,11 +68,13 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 	 */
 	public UserService(UserRepository userRepository, ModelMapper modelMapper,
 			MessageSource messageSource,
-			PasswordEncoder passwordEncoder) {
+			PasswordEncoder passwordEncoder,
+			AuthenticationHolderProvider authenticationHolderProvider) {
 		this.userRepository = userRepository;
 		this.modelMapper = modelMapper;
 		this.messageSource = messageSource;
 		this.passwordEncoder = passwordEncoder;
+		this.authenticationHolderProvider = authenticationHolderProvider;
 	}
 	
 	/**
@@ -74,6 +83,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 	 * @param obj the obj
 	 * @return the user DTO
 	 */
+	@Transactional
 	@Override
 	public UserDTO add(UserDTO obj) {
 		LOG.info("method: add");
@@ -102,6 +112,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 	 * @param obj the obj
 	 * @return the user DTO
 	 */
+	@Transactional
 	@Override
 	public UserDTO update(UserDTO obj) {
 		LOG.info("method: update");
@@ -128,6 +139,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 	 *
 	 * @param id the id
 	 */
+	@Transactional
 	@Override
 	public void delete(Long id) {
 		LOG.info("method: delete");
@@ -201,6 +213,37 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		return resultData;
 	}
 
-	
+	/**
+	 * Update password.
+	 *
+	 * @param dto the dto
+	 */
+	@Transactional
+	@Override
+	public void updatePassword(UserPasswordChangeDTO dto) {
+		LOG.info("method: updatePassword");
+		
+		Authentication auth = authenticationHolderProvider.provideContextHolder();		
+		LOG.info((String) auth.getPrincipal());
+		LOG.info((String) auth.getCredentials());
+		
+		if (!dto.getUsername().toUpperCase().equals(auth.getPrincipal())) throw new ExceptionValueNotPermitted(
+				messageSource.getMessage("error.notPermitted", new String[] {"User"}, LocaleContextHolder.getLocale())
+		);
+		
+		Optional<User> foundUser = userRepository
+				.findByUsernameAndStatus(dto.getUsername().toUpperCase(), Status.ACTIVE.getDigit());
+		
+		if (foundUser.isEmpty()) throw new ExceptionValueNotPermitted(
+				messageSource.getMessage("error.notFound", new String[] {"User"}, LocaleContextHolder.getLocale())
+		);
+		
+		// It was not possible to validate OLD password
+		
+		int result = userRepository.setPasswordById(passwordEncoder.encode(dto.getNewPassword()), 
+				foundUser.get().getId());
+		if (result < 1) throw new ExceptionInternalServerError(
+				messageSource.getMessage("error.passwordNotChanged", new String[] {"Password"}, LocaleContextHolder.getLocale()));
+	}
 	
 }

@@ -31,9 +31,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UserController.
+ * 
+ * @author Luis Espinosa
  */
 @RestController
 @RequestMapping("/api/v1/users")
@@ -144,6 +145,27 @@ public class UserController {
 
 		ApiCustomResponse response = new ApiCustomResponse.ApiResponseBuilder(200).message("Users Paginated")
 				.data(results).build();
+
+		return ResponseEntity.ok(response);
+	}
+	
+	
+	/**
+	 * Update credentials.
+	 *
+	 * @param userPasswordChangeDTO the user password change DTO
+	 * @return the response entity
+	 */
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPERVISOR')")
+	@Operation(summary = "Update the credentials")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Update the credentials", content = {
+			@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiCustomResponse.class)) }) })
+	@PutMapping("/changePassword")
+	public ResponseEntity<ApiCustomResponse> updateCredentials(@Valid @RequestBody UserPasswordChangeDTO userPasswordChangeDTO) {
+		LOG.info("method: updateCredentials");
+
+		userService.updatePassword(userPasswordChangeDTO);
+		ApiCustomResponse response = new ApiCustomResponse.ApiResponseBuilder(200).message("User password updated").build();
 
 		return ResponseEntity.ok(response);
 	}

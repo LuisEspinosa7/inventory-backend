@@ -86,5 +86,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE ( LOWER(u.name) LIKE LOWER(concat('%', concat(?1, '%'))) OR "
 			+ "LOWER(u.lastName) LIKE LOWER(concat('%', concat(?1, '%'))) ) AND u.status IN(?2) ORDER BY u.id DESC")
 	Page<User> findByTermsContaining(String searchTerm, List<Integer> status, Pageable pageable); // List WITH search term
+	
+	
+	/**
+	 * Find by username and status.
+	 *
+	 * @param username the username
+	 * @param status the status
+	 * @return the optional
+	 */
+	Optional<User> findByUsernameAndStatus(String username, Integer status); // Password change
+	
+	/**
+	 * Sets the password by id.
+	 *
+	 * @param password the password
+	 * @param id the id
+	 * @return the int
+	 */
+	@Modifying
+	@Query("update User u SET u.password =:password WHERE u.id =:id")
+	int setPasswordById(@Param("password") String password, @Param("id") Long id);
 
 }

@@ -155,7 +155,7 @@ class UserRepositoryTest {
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()));
 		assertThat(expected.isPresent()).isTrue();
 		
-		int modified = underTest.setStatusById(Status.DELETED.getDigit(), 1L);
+		int modified = underTest.setStatusById(Status.INACTIVE.getDigit(), expected.get().getId());
 		assertThat(modified).isEqualTo(1);
 	}
 	
@@ -209,5 +209,58 @@ class UserRepositoryTest {
 				PageRequest.of(0, 2));
 		assertThat(expected.getContent().size()).isEqualTo(1);
 	}
+	
+	
+	/**
+	 * It should find user by username and status.
+	 */
+	@Test
+	void itShouldFindUserByUsernameAndStatus() {
+		
+		String username = "luis3";
+		User user = new User();
+		user.setDocument("123456789");
+		user.setName("Luis");
+		user.setLastName("Espinosa");
+		user.setUsername("luis3");
+		user.setPassword("123456");
+		user.setStatus(Status.ACTIVE.getDigit());
+		
+		underTest.save(user);
+		
+		Optional<User> expected = underTest.findByUsernameAndStatus(username, Status.ACTIVE.getDigit());
+		assertThat(expected.isPresent()).isTrue();
+		assertThat(expected.get().getId()).isEqualTo(user.getId());
+		assertThat(expected.get().getDocument()).isEqualTo(user.getDocument());
+		assertThat(expected.get().getName()).isEqualTo(user.getName());
+		assertThat(expected.get().getLastName()).isEqualTo(user.getLastName());
+		assertThat(expected.get().getUsername()).isEqualTo(user.getUsername());
+		assertThat(expected.get().getPassword()).isEqualTo(user.getPassword());
+	}
 
+	
+	/**
+	 * It should find by id and status then set password by id.
+	 */
+	@Test
+	void itShouldFindByIdAndStatusThenSetPasswordById() {
+		User user = new User();
+		user.setDocument("123456789");
+		user.setName("Luis");
+		user.setLastName("Espinosa");
+		user.setUsername("luis3");
+		user.setPassword("123456");
+		user.setStatus(Status.ACTIVE.getDigit());
+		
+		underTest.save(user);
+		
+		Optional<User> expected = underTest.findByIdAndStatus(user.getId(), 
+				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()));
+		assertThat(expected.isPresent()).isTrue();
+		
+		int modified = underTest.setPasswordById("12345678", expected.get().getId());
+		assertThat(modified).isEqualTo(1);
+	}
+	
+	
 }

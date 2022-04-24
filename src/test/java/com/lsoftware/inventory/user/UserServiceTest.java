@@ -28,8 +28,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.lsoftware.inventory.authentication.AuthenticationHolderProvider;
 import com.lsoftware.inventory.exception.ExceptionInternalServerError;
 import com.lsoftware.inventory.exception.ExceptionObjectNotFound;
 import com.lsoftware.inventory.exception.ExceptionValueNotPermitted;
@@ -66,6 +68,10 @@ class UserServiceTest {
 	/** The password encoder. */
 	@Mock
 	private PasswordEncoder passwordEncoder;
+	
+	/** The authentication holder provider. */
+	@Mock
+	private AuthenticationHolderProvider authenticationHolderProvider;
 
 	/**
 	 * Sets the up.
@@ -75,7 +81,7 @@ class UserServiceTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		modelMapper = new ModelMapper();
-		underTest = new UserService(userRepository, modelMapper, messageSource, passwordEncoder);
+		underTest = new UserService(userRepository, modelMapper, messageSource, passwordEncoder, authenticationHolderProvider);
 	}
 
 	/**
@@ -253,6 +259,110 @@ class UserServiceTest {
 		assertThat(results.getResult().size()).isEqualTo(1);
 	}
 	
+	/**
+	 * It should update password.
+	 */
+	@Test
+	void itShouldUpdatePassword() {
+		
+		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("LUIS3", "123456");
+		
+		BDDMockito.given(authenticationHolderProvider.provideContextHolder())
+			.willReturn(auth);
+		
+		BDDMockito.given(userRepository.findByUsernameAndStatus(anyString(), anyInt()))
+			.willReturn(Optional.of(getUserEntitySaved()));
+		
+		BDDMockito.given(passwordEncoder.encode(anyString()))
+			.willReturn("12345678");
+		
+		BDDMockito.given(userRepository.setPasswordById(anyString(), anyLong()))
+			.willReturn(1);
+		
+		underTest.updatePassword(getUserPasswordDTO());
+		verify(userRepository, times(1)).setPasswordById(anyString(), anyLong());
+	}
+	
+	
+	/**
+	 * It should not update password not saved in DB.
+	 */
+	@Test
+	void itShouldNotUpdatePasswordNotSavedInDB() {
+		
+		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("LUIS3", "123456");
+		
+		BDDMockito.given(authenticationHolderProvider.provideContextHolder())
+			.willReturn(auth);
+		
+		BDDMockito.given(userRepository.findByUsernameAndStatus(anyString(), anyInt()))
+			.willReturn(Optional.of(getUserEntitySaved()));
+		
+		BDDMockito.given(passwordEncoder.encode(anyString()))
+			.willReturn("12345678");
+		
+		BDDMockito.given(userRepository.setPasswordById(anyString(), anyLong()))
+			.willReturn(0);
+		
+		assertThatThrownBy(() -> underTest.updatePassword(getUserPasswordDTO()))
+			.isInstanceOf(ExceptionInternalServerError.class);
+		verify(userRepository, times(1)).setPasswordById(anyString(), anyLong());
+	}
+	
+	
+	/**
+	 * It should not update passwor user not found.
+	 */
+	@Test
+	void itShouldNotUpdatePassworUserNotFound() {
+		
+		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("LUIS3", "123456");
+		
+		BDDMockito.given(authenticationHolderProvider.provideContextHolder())
+			.willReturn(auth);
+		
+		BDDMockito.given(userRepository.findByUsernameAndStatus(anyString(), anyInt()))
+			.willReturn(Optional.empty());
+		
+		assertThatThrownBy(() -> underTest.updatePassword(getUserPasswordDTO()))
+			.isInstanceOf(ExceptionValueNotPermitted.class);
+		verify(userRepository, times(0)).setPasswordById(anyString(), anyLong());
+	}
+	
+	
+	/**
+	 * It should not update passwor not same credentials.
+	 */
+	@Test
+	void itShouldNotUpdatePassworNotSameCredentials() {
+		
+		UsernamePasswordAuthenticationToken auth = 
+				new UsernamePasswordAuthenticationToken("LUIS3", "1234567");
+		
+		BDDMockito.given(authenticationHolderProvider.provideContextHolder())
+			.willReturn(auth);
+		
+		assertThatThrownBy(() -> underTest.updatePassword(getUserPasswordDTO()))
+			.isInstanceOf(ExceptionValueNotPermitted.class);
+		verify(userRepository, times(0)).setPasswordById(anyString(), anyLong());
+	}
+	
+	/**
+	 * It should not update passwor not same principal.
+	 */
+	@Test
+	void itShouldNotUpdatePassworNotSamePrincipal() {
+		
+		UsernamePasswordAuthenticationToken auth = 
+				new UsernamePasswordAuthenticationToken("LUIS4", "123456");
+		
+		BDDMockito.given(authenticationHolderProvider.provideContextHolder())
+			.willReturn(auth);
+		
+		assertThatThrownBy(() -> underTest.updatePassword(getUserPasswordDTO()))
+			.isInstanceOf(ExceptionValueNotPermitted.class);
+		verify(userRepository, times(0)).setPasswordById(anyString(), anyLong());
+	}
 	
 	
 	/**
@@ -273,6 +383,15 @@ class UserServiceTest {
 	private User getUserEntitySaved() {
 		return new User(1L, "123456789", "Luis", "Espinosa", "LUIS3", "123456", Status.ACTIVE.getDigit(), 
 				Set.of(new Role(1L, "ADMIN", "DESCCRIPTION")));
+	}
+	
+	/**
+	 * Gets the user password DTO.
+	 *
+	 * @return the user password DTO
+	 */
+	private UserPasswordChangeDTO getUserPasswordDTO() {
+		return new UserPasswordChangeDTO("LUIS3", "123456", "12345678");
 	}
 
 }

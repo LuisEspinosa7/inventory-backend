@@ -1,7 +1,10 @@
+/*
+ * Developed by: Luis Espinosa, be aware that this project
+ * is part of my personal portfolio.
+ */
 package com.lsoftware.inventory.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -12,8 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +30,21 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lsoftware.inventory.category.CategoryDTO;
-import com.lsoftware.inventory.category.CategoryService;
 import com.lsoftware.inventory.role.Role;
 import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
 import com.lsoftware.inventory.shared.status.Status;
 
+/**
+ * The Class UserControllerTest.
+ * 
+ * @author Luis Espinosa
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {
 	
+	/** The user service. */
 	@MockBean
 	private UserService userService; 
 	
@@ -52,6 +57,12 @@ class UserControllerTest {
 	private ObjectMapper objectMapper;
 
 
+	/**
+	 * It should create new user.
+	 *
+	 * @throws JsonProcessingException the json processing exception
+	 * @throws Exception the exception
+	 */
 	@Test
 	@WithMockUser(username = "luis3", password = "123456", roles = "ADMIN")
 	void itShouldCreateNewUser() throws JsonProcessingException, Exception {
@@ -72,6 +83,12 @@ class UserControllerTest {
 	}
 	
 	
+	/**
+	 * It should update user.
+	 *
+	 * @throws JsonProcessingException the json processing exception
+	 * @throws Exception the exception
+	 */
 	@Test
 	@WithMockUser(username = "luis3", password = "123456", roles = "ADMIN")
 	void itShouldUpdateUser() throws JsonProcessingException, Exception {
@@ -92,6 +109,12 @@ class UserControllerTest {
 	}
 	
 	
+	/**
+	 * It should delete user.
+	 *
+	 * @throws JsonProcessingException the json processing exception
+	 * @throws Exception the exception
+	 */
 	@Test
 	@WithMockUser(username = "luis3", password = "123456", roles = "ADMIN")
 	void itShouldDeleteUser() throws JsonProcessingException, Exception {
@@ -108,6 +131,11 @@ class UserControllerTest {
 	}
 	
 	
+	/**
+	 * It should list paginated users no search term.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	@WithMockUser(username = "luis3", password = "123456", roles = "ADMIN")
 	void itShouldListPaginatedUsersNoSearchTerm() throws Exception {
@@ -134,7 +162,7 @@ class UserControllerTest {
 			.andDo(MockMvcResultHandlers.print())
         	.andExpect(status().isOk())
         	.andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Users Paginated"))
-        	//.andExpect(MockMvcResultMatchers.jsonPath("$..data.length()").value(2))
+        	.andExpect(MockMvcResultMatchers.jsonPath("$..data.result.length()").value(2))
         	.andReturn();
 		
 		
@@ -143,6 +171,11 @@ class UserControllerTest {
 	}
 	
 	
+	/**
+	 * It should list paginated categories with search term.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	@WithMockUser(username = "luis3", password = "123456", roles = "ADMIN")
 	void itShouldListPaginatedCategoriesWithSearchTerm() throws Exception {
@@ -170,7 +203,7 @@ class UserControllerTest {
 			.andDo(MockMvcResultHandlers.print())
         	.andExpect(status().isOk())
         	.andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Users Paginated"))
-        	//.andExpect(MockMvcResultMatchers.jsonPath("$..data.length()").value(2))
+        	.andExpect(MockMvcResultMatchers.jsonPath("$..data.result.length()").value(2))
         	.andReturn();
 		
 		
@@ -179,9 +212,44 @@ class UserControllerTest {
 	}
 	
 	
+	
+	
+	
+	@Test
+	@WithMockUser(username = "LUIS3", password = "123456", roles = "ADMIN")
+	void itShouldUpdateUserPassword() throws JsonProcessingException, Exception {
+		
+		MvcResult result = mockMvc.perform(put("/api/v1/users/changePassword/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(getUserPasswordChangeDTO())))
+				.andDo(MockMvcResultHandlers.print())
+	        	.andExpect(status().isOk())
+	        	.andExpect(MockMvcResultMatchers.jsonPath("$.message").value("User password updated"))
+	        	.andReturn();
+			
+		String response = result.getResponse().getContentAsString();
+		assertThat(response).isNotNull();	
+	}
+	
+	
+	/**
+	 * Gets the user DTO.
+	 *
+	 * @return the user DTO
+	 */
 	private UserDTO getUserDTO() {
 		return new UserDTO(1L, "123456789", "Luis", "Espinosa", "luis3", "123456", Status.ACTIVE.getDigit(), 
 				Set.of(new Role(1L, "ADMIN", "DESCCRIPTION")));
+	}
+	
+	
+	/**
+	 * Gets the user password change DTO.
+	 *
+	 * @return the user password change DTO
+	 */
+	private UserPasswordChangeDTO getUserPasswordChangeDTO() {
+		return new UserPasswordChangeDTO("LUIS3", "123456", "12345678");
 	}
 	
 

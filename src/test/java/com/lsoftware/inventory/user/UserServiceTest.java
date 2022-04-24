@@ -36,6 +36,7 @@ import com.lsoftware.inventory.exception.ExceptionInternalServerError;
 import com.lsoftware.inventory.exception.ExceptionObjectNotFound;
 import com.lsoftware.inventory.exception.ExceptionValueNotPermitted;
 import com.lsoftware.inventory.role.Role;
+import com.lsoftware.inventory.role.RoleRepository;
 import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
 import com.lsoftware.inventory.shared.status.Status;
@@ -72,6 +73,9 @@ class UserServiceTest {
 	/** The authentication holder provider. */
 	@Mock
 	private AuthenticationHolderProvider authenticationHolderProvider;
+	
+	@Mock
+	private RoleRepository roleRepository;
 
 	/**
 	 * Sets the up.
@@ -81,7 +85,7 @@ class UserServiceTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		modelMapper = new ModelMapper();
-		underTest = new UserService(userRepository, modelMapper, messageSource, passwordEncoder, authenticationHolderProvider);
+		underTest = new UserService(userRepository, modelMapper, messageSource, passwordEncoder, authenticationHolderProvider, roleRepository);
 	}
 
 	/**
@@ -133,6 +137,9 @@ class UserServiceTest {
 		
 		BDDMockito.given(userRepository.save(any()))
 			.willReturn(getUserEntitySaved());
+		
+		BDDMockito.given(roleRepository.findAll())
+			.willReturn(getRolesList());
 		
 		UserDTO result = underTest.update(getUserDTO());
 		assertThat(result.getUsername()).isEqualTo(getUserEntitySaved().getUsername());
@@ -392,6 +399,19 @@ class UserServiceTest {
 	 */
 	private UserPasswordChangeDTO getUserPasswordDTO() {
 		return new UserPasswordChangeDTO("LUIS3", "123456", "12345678");
+	}
+	
+	
+	/**
+	 * Gets the roles list.
+	 *
+	 * @return the roles list
+	 */
+	private List<Role> getRolesList() {
+		return List.of(
+				new Role(1L, "ADMIN", "DESCR"),
+				new Role(2L, "SUPERVISOR", "DESCR")
+		);
 	}
 
 }

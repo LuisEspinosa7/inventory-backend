@@ -4,8 +4,10 @@
  */
 package com.lsoftware.inventory.user;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -24,6 +26,8 @@ import com.lsoftware.inventory.authentication.AuthenticationHolderProvider;
 import com.lsoftware.inventory.exception.ExceptionInternalServerError;
 import com.lsoftware.inventory.exception.ExceptionObjectNotFound;
 import com.lsoftware.inventory.exception.ExceptionValueNotPermitted;
+import com.lsoftware.inventory.role.Role;
+import com.lsoftware.inventory.role.RoleRepository;
 import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
 import com.lsoftware.inventory.shared.service.ServiceMethods;
@@ -57,6 +61,9 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 	/** The authentication custom holder provider. */
 	private AuthenticationHolderProvider authenticationHolderProvider;
 	
+	/** The role repository. */
+	private RoleRepository roleRepository;
+	
 	
 	/**
 	 * Instantiates a new user service.
@@ -69,12 +76,14 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 	public UserService(UserRepository userRepository, ModelMapper modelMapper,
 			MessageSource messageSource,
 			PasswordEncoder passwordEncoder,
-			AuthenticationHolderProvider authenticationHolderProvider) {
+			AuthenticationHolderProvider authenticationHolderProvider,
+			RoleRepository roleRepository) {
 		this.userRepository = userRepository;
 		this.modelMapper = modelMapper;
 		this.messageSource = messageSource;
 		this.passwordEncoder = passwordEncoder;
 		this.authenticationHolderProvider = authenticationHolderProvider;
+		this.roleRepository = roleRepository;
 	}
 	
 	/**
@@ -103,6 +112,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		user.setStatus(Status.ACTIVE.getDigit());
 		
 		User saved = userRepository.save(user);
+		saved.setPassword("");
 		return modelMapper.map(saved, UserDTO.class);
 	}
 
@@ -128,9 +138,22 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		foundObj.setName(obj.getName());
 		foundObj.setLastName(obj.getLastName());
 		foundObj.setStatus(obj.getStatus());
-		foundObj.setRoles(obj.getRoles());
+		
+		Set<Role> foundRoles = roleRepository.findAll().stream().collect(Collectors.toSet());
+		Set<Role> filtered = new HashSet<>();
+		
+		for (Role role : obj.getRoles()) {
+			for (Role found : foundRoles) {
+				if (found.getId() == role.getId()) {
+					filtered.add(found);
+				}
+			}
+		}
+		
+		foundObj.setRoles(filtered);
 		
 		User saved = userRepository.save(foundObj);
+		saved.setPassword("");
 		return modelMapper.map(saved, UserDTO.class);
 	}
 

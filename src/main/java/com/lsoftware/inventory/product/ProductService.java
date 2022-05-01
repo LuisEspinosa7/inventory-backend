@@ -94,6 +94,7 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 		product.setName(product.getName().toUpperCase());
 		product.setStatus(Status.ACTIVE.getDigit());
 		product.setPrice(new BigDecimal(obj.getPrice()));
+		product.setQuantity(0);
 		
 		Category category = categoryRepository.findAll()
 			.stream()
@@ -123,7 +124,7 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 		Product product = productRepository
 				.findByIdAndStatus(obj.getId(), List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()))
 				.orElseThrow(() -> new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.notFound", new String[] {"Category"}, LocaleContextHolder.getLocale())
+				messageSource.getMessage("error.notFound", new String[] {"Product"}, LocaleContextHolder.getLocale())
 		));
 		
 		product.setName(obj.getName().toUpperCase());

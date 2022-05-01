@@ -41,7 +41,7 @@ public class Product implements Serializable {
 
 	/** The id. */
 	@Id
-	@Column(name = "pro_id")
+	@Column(name = "prod_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	

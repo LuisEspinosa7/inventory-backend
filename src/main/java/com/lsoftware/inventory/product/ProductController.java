@@ -4,6 +4,8 @@
  */
 package com.lsoftware.inventory.product;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -14,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -143,6 +146,21 @@ public class ProductController {
 
 		ApiCustomResponse response = new ApiCustomResponse.ApiResponseBuilder(200).message("Products Paginated")
 				.data(results).build();
+
+		return ResponseEntity.ok(response);
+	}
+	
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPERVISOR')")
+	@Operation(summary = "List the available products")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "List the available products", content = {
+			@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiCustomResponse.class)) }) })
+	@GetMapping()
+	public ResponseEntity<ApiCustomResponse> listAll() {
+		LOG.info("method: listAll");
+
+		List<ProductDTO> results = productService.list();
+		ApiCustomResponse response = new ApiCustomResponse.ApiResponseBuilder(200).message("Products List").data(results).build();
 
 		return ResponseEntity.ok(response);
 	}

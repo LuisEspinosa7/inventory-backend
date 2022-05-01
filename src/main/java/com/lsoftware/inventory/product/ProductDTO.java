@@ -36,13 +36,12 @@ public class ProductDTO {
 	private String name;
 	
 	/** The price. */
-	@NotNull(message = "Name {error.NotNull}")
-	@NotEmpty(message = "Name {error.NotEmpty}")
+	@NotNull(message = "Price {error.NotNull}")
+	@NotEmpty(message = "Price {error.NotEmpty}")
 	private String price;
 	
 	/** The quantity. */
-	@NotNull(message = "Name {error.NotNull}")
-	@NotEmpty(message = "Name {error.NotEmpty}")
+	@NotNull(message = "Quantity {error.NotNull}")
 	private int quantity;
 	
 	/** The category. */
@@ -50,7 +49,7 @@ public class ProductDTO {
 	private Category category;
 	
 	/** The status. */
-	@NotNull(message = "Name {error.NotNull}")
+	@NotNull(message = "Status {error.NotNull}")
 	private int status;
 
 }

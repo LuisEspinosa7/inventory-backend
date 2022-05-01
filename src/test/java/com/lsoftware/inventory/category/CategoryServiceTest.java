@@ -33,6 +33,7 @@ import org.springframework.data.domain.PageImpl;
 import com.lsoftware.inventory.exception.ExceptionInternalServerError;
 import com.lsoftware.inventory.exception.ExceptionObjectNotFound;
 import com.lsoftware.inventory.exception.ExceptionValueNotPermitted;
+import com.lsoftware.inventory.product.ProductRepository;
 import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
 import com.lsoftware.inventory.shared.status.Status;
@@ -60,6 +61,9 @@ class CategoryServiceTest {
 	@Mock
 	private MessageSource messageSource;
 	
+	@Mock
+	private ProductRepository productRepository;
+	
 	
 	/**
 	 * Sets the up.
@@ -68,7 +72,7 @@ class CategoryServiceTest {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
-		underTest = new CategoryService(categoryRepository, modelMapper, messageSource);
+		underTest = new CategoryService(categoryRepository, modelMapper, messageSource, productRepository);
 	}
 
 	/**

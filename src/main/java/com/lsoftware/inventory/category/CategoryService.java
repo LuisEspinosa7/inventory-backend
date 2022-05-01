@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lsoftware.inventory.exception.ExceptionObjectNotFound;
 import com.lsoftware.inventory.exception.ExceptionValueNotPermitted;
+import com.lsoftware.inventory.product.ProductRepository;
 import com.lsoftware.inventory.exception.ExceptionInternalServerError;
 import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
@@ -48,6 +49,9 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	/** The message source. */
 	private MessageSource messageSource;
 	
+	/** The product repository. */
+	private ProductRepository productRepository;
+	
 	/**
 	 * Instantiates a new category service.
 	 *
@@ -56,10 +60,12 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	 * @param messageSource the message source
 	 */
 	public CategoryService(CategoryRepository categoryRepository, ModelMapper modelMapper,
-			MessageSource messageSource) {
+			MessageSource messageSource,
+			ProductRepository productRepository) {
 		this.categoryRepository = categoryRepository;
 		this.modelMapper = modelMapper;
 		this.messageSource = messageSource;
+		this.productRepository = productRepository;
 	}
 
 	/**
@@ -124,9 +130,10 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	public void delete(Long id) {
 		LOG.info("method: delete");
 		
-		// TODO: Validate if there is already a product using this 
-		// category, is so the deletion could not be done.
+		long count = productRepository.countByCategoryId(id);
 		
+		if (count > 0) throw new ExceptionValueNotPermitted(
+				messageSource.getMessage("error.isBeingUsed", new String[] {"Category", "Product"}, LocaleContextHolder.getLocale()));
 		
 		Optional<Category> category = categoryRepository.findById(id)
 				.map(obj -> Optional.ofNullable(obj))

@@ -111,6 +111,23 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		user.setPassword(passwordEncoder.encode(obj.getPassword()));
 		user.setStatus(Status.ACTIVE.getDigit());
 		
+		Set<Role> foundRoles = roleRepository.findAll().stream().collect(Collectors.toSet());
+		Set<Role> filtered = new HashSet<>();
+		
+		for (Role role : obj.getRoles()) {
+			for (Role found : foundRoles) {
+				if (found.getId() == role.getId()) {
+					filtered.add(found);
+				}
+			}
+		}
+		
+		if (filtered.isEmpty()) throw new ExceptionValueNotPermitted(
+				messageSource.getMessage("error.notFound", new String[] {"User roles "}, LocaleContextHolder.getLocale())
+		);
+		
+		user.setRoles(filtered);
+		
 		User saved = userRepository.save(user);
 		saved.setPassword("000");
 		return modelMapper.map(saved, UserDTO.class);
@@ -149,6 +166,10 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 				}
 			}
 		}
+		
+		if (filtered.isEmpty()) throw new ExceptionValueNotPermitted(
+				messageSource.getMessage("error.notFound", new String[] {"User roles "}, LocaleContextHolder.getLocale())
+		);
 		
 		foundObj.setRoles(filtered);
 		

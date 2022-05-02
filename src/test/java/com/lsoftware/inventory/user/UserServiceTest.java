@@ -41,6 +41,7 @@ import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
 import com.lsoftware.inventory.shared.status.Status;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class UserServiceTest.
  * 
@@ -74,6 +75,7 @@ class UserServiceTest {
 	@Mock
 	private AuthenticationHolderProvider authenticationHolderProvider;
 	
+	/** The role repository. */
 	@Mock
 	private RoleRepository roleRepository;
 
@@ -91,6 +93,7 @@ class UserServiceTest {
 	/**
 	 * It should add new user.
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	void itShouldAddNewUser() {
 		
@@ -103,11 +106,41 @@ class UserServiceTest {
 		BDDMockito.given(userRepository.save(any()))
 			.willReturn(getUserEntitySaved());
 		
+		BDDMockito.given(roleRepository.findAll())
+			.willReturn(
+					List.of(new Role(1L, "ADMIN", "ADASDASD")),
+					List.of(new Role(2L, "SUPERVISOR", "ADASDASD"))
+			);
+		
 		UserDTO result = underTest.add(getUserDTO());
 		assertThat(result.getUsername()).isEqualTo(getUserEntitySaved().getUsername());
 		assertThat(result.getId()).isEqualTo(getUserEntitySaved().getId());
 		assertThat(result.getStatus()).isEqualTo(getUserEntitySaved().getStatus());
 		verify(userRepository, times(1)).save(any());
+	}
+	
+	/**
+	 * It should fail adding new user role not found.
+	 */
+	@SuppressWarnings("unchecked")
+	@Test
+	void itShouldFailAddingNewUserRoleNotFound() {
+		
+		BDDMockito.given(userRepository.findByDocumentAndUsernameAndStatus(anyString(), anyString(), anyList()))
+			.willReturn(Optional.empty());
+			
+		BDDMockito.given(passwordEncoder.encode(anyString()))
+			.willReturn(ENCODED_PASSWORD);
+		
+		BDDMockito.given(roleRepository.findAll())
+			.willReturn(
+					List.of(new Role(2L, "SUPERVISOR", "ADASDASD"))
+			);
+		
+		assertThatThrownBy(() -> underTest.add(getUserDTO()))
+			.isInstanceOf(ExceptionValueNotPermitted.class);
+	
+		verify(userRepository, times(0)).save(any());
 	}
 	
 	/**
@@ -146,6 +179,24 @@ class UserServiceTest {
 		assertThat(result.getId()).isEqualTo(getUserEntitySaved().getId());
 		assertThat(result.getStatus()).isEqualTo(getUserEntitySaved().getStatus());
 		verify(userRepository, times(1)).save(any());
+	}
+	
+	
+	@Test
+	void itShouldUpdateUserRoleNotFound() {
+		
+		BDDMockito.given(userRepository.findByIdAndStatus(anyLong(), anyList()))
+			.willReturn(Optional.of(getUserEntitySaved()));
+
+		BDDMockito.given(roleRepository.findAll())
+			.willReturn(
+					List.of(new Role(2L, "SUPERVISOR", "ADASDASD"))
+			);
+		
+		assertThatThrownBy(() -> underTest.update(getUserDTO()))
+			.isInstanceOf(ExceptionValueNotPermitted.class);
+
+		verify(userRepository, times(0)).save(any());
 	}
 	
 	

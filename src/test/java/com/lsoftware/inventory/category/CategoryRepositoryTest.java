@@ -64,14 +64,14 @@ class CategoryRepositoryTest {
 		Category cat = new Category();
 		cat.setName("CATEGORY1");
 		cat.setStatus(Status.ACTIVE.getDigit());
-		underTest.save(cat);
+		Category saved = underTest.save(cat);
 		
-		Optional<Category> result = underTest.findByIdAndStatus(1L, cat.getStatus());
+		Optional<Category> result = underTest.findByIdAndStatus(saved.getId(), cat.getStatus());
 		assertThat(result.isPresent()).isTrue();
 		assertThat(result.get().getName()).isEqualTo(cat.getName());
 		assertThat(result.get().getStatus()).isEqualTo(cat.getStatus());
 		
-		int modified = underTest.setStatusById(Status.DELETED.getDigit(), 1L);
+		int modified = underTest.setStatusById(Status.DELETED.getDigit(), saved.getId());
 		assertThat(modified).isEqualTo(1);
 	}
 	

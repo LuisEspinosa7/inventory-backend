@@ -90,7 +90,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	 * @param id the id
 	 * @return the long
 	 */
-	@Query("SELECT COUNT(p) FROM Product p WHERE p.category=?1")
+	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id=?1")
     long countByCategoryId(Long id);
 	
 }

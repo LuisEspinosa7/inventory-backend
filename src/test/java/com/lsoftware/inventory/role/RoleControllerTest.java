@@ -37,8 +37,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class RoleControllerTest {
 	
 	/** The Constant TOKEN_EXAMPLE. */
-	private static final String TOKEN_EXAMPLE = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsdWlzMyIsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImlhdCI6MTY1MDIyMzk3NiwiZXhwIjoxNjUxMDM1NjAwfQ.wGYgnNdA6r_8k0EYmjE0Cs_e3FSygPfaRknlmLaS4NdPBK7NeM1LC_lx0_N8A706SnoAe9uEZ-2uSIZN28klYA";
-		
+	//private static final String TOKEN_EXAMPLE = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsdWlzMyIsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImlhdCI6MTY1MDIyMzk3NiwiZXhwIjoxNjUxMDM1NjAwfQ.wGYgnNdA6r_8k0EYmjE0Cs_e3FSygPfaRknlmLaS4NdPBK7NeM1LC_lx0_N8A706SnoAe9uEZ-2uSIZN28klYA";
+	private static final String TOKEN_EXAMPLE = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJMVUlTMyIsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImlhdCI6MTY1MTQ1MzgwMSwiZXhwIjoxOTY2NzQxMjAwfQ.BGqEfoxOHKz4pYpVyLm5RqWRkPlXcW3AWTSbzgdm5uzQI6t2HIe-qXXObWR-aaWhOy9C0plKMXfCJxYYNwuInA";
+	
 	/** The role service. */
 	@MockBean
 	private RoleService roleService; 

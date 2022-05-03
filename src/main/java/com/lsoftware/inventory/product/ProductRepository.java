@@ -93,4 +93,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id=?1")
     long countByCategoryId(Long id);
 	
+	/**
+	 * Actualizar stock.
+	 *
+	 * @param stock the stock
+	 * @param id the id
+	 */
+	@Modifying
+	@Query("update Product p set p.quantity =:stock where p.id =:id")
+	void updateStock(@Param("stock") Integer stock, @Param("id") Long id);
+	
 }

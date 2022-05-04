@@ -163,10 +163,15 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 			
 		Optional<Product> found = productRepository.findByIdAndStatus(id, 
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()))
-				.map(obj -> Optional.ofNullable(obj))
+				.map(Optional::ofNullable)
 				.orElseThrow(() -> new ExceptionObjectNotFound(
 						messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {PRODUCT_TEXT}, LocaleContextHolder.getLocale())
 				));
+		
+		if (found.isEmpty()) {
+			throw new ExceptionObjectNotFound(
+					messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {PRODUCT_TEXT}, LocaleContextHolder.getLocale()));
+		}
 		
 		int result = productRepository.setStatusById(Status.DELETED.getDigit(), found.get().getId());
 		if (result < 1) throw new ExceptionInternalServerError(

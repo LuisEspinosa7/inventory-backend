@@ -47,7 +47,7 @@ public class MappingsCustom {
 	 * @throws DatabindException the databind exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public RequestAuthenticationData readValue(ServletInputStream servletInputStream, Class<RequestAuthenticationData> valueType) throws StreamReadException, DatabindException, IOException {
+	public RequestAuthenticationData readValue(ServletInputStream servletInputStream, Class<RequestAuthenticationData> valueType) throws IOException {
 		return objectMapper
 			.readValue(servletInputStream, valueType);
 	}

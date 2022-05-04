@@ -115,21 +115,15 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		user.setStatus(Status.ACTIVE.getDigit());
 		
 		Set<Role> foundRoles = roleRepository.findAll().stream().collect(Collectors.toSet());
-		Set<Role> filtered = new HashSet<>();
+		Set<Role> filtered1 = new HashSet<>();
 		
-		for (Role role : obj.getRoles()) {
-			for (Role found : foundRoles) {
-				if (found.getId() == role.getId()) {
-					filtered.add(found);
-				}
-			}
-		}
+		filterRoles(foundRoles, filtered1, obj);
 		
-		if (filtered.isEmpty()) throw new ExceptionValueNotPermitted(
+		if (filtered1.isEmpty()) throw new ExceptionValueNotPermitted(
 				messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User roles "}, LocaleContextHolder.getLocale())
 		);
 		
-		user.setRoles(filtered);
+		user.setRoles(filtered1);
 		
 		User saved = userRepository.save(user);
 		saved.setPassword("000");
@@ -162,13 +156,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		Set<Role> foundRoles = roleRepository.findAll().stream().collect(Collectors.toSet());
 		Set<Role> filtered = new HashSet<>();
 		
-		for (Role role : obj.getRoles()) {
-			for (Role found : foundRoles) {
-				if (found.getId() == role.getId()) {
-					filtered.add(found);
-				}
-			}
-		}
+		filterRoles(foundRoles, filtered, obj);
 		
 		if (filtered.isEmpty()) throw new ExceptionValueNotPermitted(
 				messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User roles "}, LocaleContextHolder.getLocale())
@@ -179,6 +167,24 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		User saved = userRepository.save(foundObj);
 		saved.setPassword("000");
 		return modelMapper.map(saved, UserDTO.class);
+	}
+	
+	
+	/**
+	 * Filter roles.
+	 *
+	 * @param foundRoles the found roles
+	 * @param filtered the filtered
+	 * @param obj the obj
+	 */
+	private void filterRoles(Set<Role> foundRoles, Set<Role> filtered, UserDTO obj) {
+		for (Role role : obj.getRoles()) {
+			for (Role found : foundRoles) {
+				if (found.getId().equals(role.getId())) {
+					filtered.add(found);
+				}
+			}
+		}
 	}
 
 	/**
@@ -193,10 +199,17 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		
 		Optional<User> user = userRepository.findByIdAndStatus(id, 
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()))
-				.map(obj -> Optional.ofNullable(obj))
+				.map(Optional::ofNullable)
 				.orElseThrow(() -> new ExceptionObjectNotFound(
 						messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User"}, LocaleContextHolder.getLocale())
 				));
+		
+		if (user.isEmpty()) {
+			throw new ExceptionObjectNotFound(
+					messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User"}, LocaleContextHolder.getLocale())
+			);
+		}
+		
 		
 		int result = userRepository.setStatusById(Status.DELETED.getDigit(), user.get().getId());
 		if (result < 1) throw new ExceptionInternalServerError(

@@ -40,6 +40,9 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	/** The Constant LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryService.class);
 	
+	/** The Constant ERROR_NOT_FOUND_NAME. */
+	private static final String ERROR_NOT_FOUND_NAME = "error.notFound";
+	
 	/** The Constant CATEGORY_TEXT. */
 	private static final String CATEGORY_TEXT = "Category";
 	
@@ -113,7 +116,7 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 		Optional<Category> categoryById = categoryRepository.findByIdAndStatus(obj.getId(), Status.ACTIVE.getDigit());
 		
 		if (categoryById.isEmpty()) throw new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.notFound", new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale())
+				messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale())
 		);
 		
 		Category foundObj = categoryById.get();
@@ -139,10 +142,16 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 				messageSource.getMessage("error.isBeingUsed", new String[] {CATEGORY_TEXT, "Product"}, LocaleContextHolder.getLocale()));
 		
 		Optional<Category> category = categoryRepository.findById(id)
-				.map(obj -> Optional.ofNullable(obj))
+				.map(Optional::ofNullable)
 				.orElseThrow(() -> new ExceptionObjectNotFound(
-						messageSource.getMessage("error.notFound", new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale())
+						messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale())
 				));
+		
+		if (category.isEmpty()) {
+			throw new ExceptionObjectNotFound(
+					messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale())
+			);
+		}
 		
 		int result = categoryRepository.setStatusById(Status.DELETED.getDigit(), category.get().getId());
 		if (result < 1) throw new ExceptionInternalServerError(

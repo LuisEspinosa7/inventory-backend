@@ -8,9 +8,9 @@ application:
 spring:
     datasource:
         driver-class-name: org.postgresql.Driver
-        url: ${JDBC_DATABASE_URL}
-        username: ${JDBC_DATABASE_USERNAME}
-        password: ${JDBC_DATABASE_PASSWORD}
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${SPRING_DATASOURCE_USERNAME}
+        password: ${SPRING_DATASOURCE_PASSWORD}
     jpa:
       hibernate:
         ddl-auto: none
@@ -21,7 +21,7 @@ spring:
         hibernate:
           format_sql: true
           globally_quoted_identifiers: true
-          default_schema: ${DATABASE_SCHEMA}
+          default_schema: ${SPRING_DATABASE_SCHEMA}
           dialect: org.hibernate.dialect.PostgreSQLDialect
           
 logging:

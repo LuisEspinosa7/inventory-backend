@@ -232,7 +232,11 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		
 		List<UserDTO> mapped = results.getContent()
 			.stream()
-			.map(c -> modelMapper.map(c, UserDTO.class))
+			.map(c -> {
+				UserDTO dto = modelMapper.map(c, UserDTO.class);
+				dto.setPassword("");
+				return dto;
+			})
 			.collect(Collectors.toList());
 		
 		ResponsePaginationAndSortDTO<UserDTO> resultData = new ResponsePaginationAndSortDTO<>();
@@ -263,7 +267,11 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		
 		List<UserDTO> mapped = results.getContent()
 			.stream()
-			.map(c -> modelMapper.map(c, UserDTO.class))
+			.map(c -> {
+				UserDTO dto = modelMapper.map(c, UserDTO.class);
+				dto.setPassword("");
+				return dto;
+			})
 			.collect(Collectors.toList());
 		
 		return new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 

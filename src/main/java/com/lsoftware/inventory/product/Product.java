@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import com.lsoftware.inventory.category.Category;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +31,7 @@ import lombok.NoArgsConstructor;
  * @author Luis Espinosa
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

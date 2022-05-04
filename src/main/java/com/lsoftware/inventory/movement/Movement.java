@@ -23,6 +23,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.lsoftware.inventory.user.User;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +35,7 @@ import lombok.NoArgsConstructor;
  * @author Luis Espinosa
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

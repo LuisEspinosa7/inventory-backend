@@ -4,7 +4,6 @@
  */
 package com.lsoftware.inventory.shared.status;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum Status.
  * 

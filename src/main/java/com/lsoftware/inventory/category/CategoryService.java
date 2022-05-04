@@ -40,6 +40,9 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	/** The Constant LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryService.class);
 	
+	/** The Constant CATEGORY_TEXT. */
+	private static final String CATEGORY_TEXT = "Category";
+	
 	/** The category repository. */
 	private CategoryRepository categoryRepository;
 	
@@ -84,7 +87,7 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 						Status.ACTIVE.getDigit());
 		
 		if (search.isPresent()) throw new ExceptionValueNotPermitted(
-					messageSource.getMessage("error.alreadyExist", new String[] {"Category"}, LocaleContextHolder.getLocale())
+					messageSource.getMessage("error.alreadyExist", new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale())
 			);
 		
 		Category category = modelMapper.map(obj, Category.class);
@@ -110,7 +113,7 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 		Optional<Category> categoryById = categoryRepository.findByIdAndStatus(obj.getId(), Status.ACTIVE.getDigit());
 		
 		if (categoryById.isEmpty()) throw new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.notFound", new String[] {"Category"}, LocaleContextHolder.getLocale())
+				messageSource.getMessage("error.notFound", new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale())
 		);
 		
 		Category foundObj = categoryById.get();
@@ -133,17 +136,17 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 		long count = productRepository.countByCategoryId(id);
 		
 		if (count > 0) throw new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.isBeingUsed", new String[] {"Category", "Product"}, LocaleContextHolder.getLocale()));
+				messageSource.getMessage("error.isBeingUsed", new String[] {CATEGORY_TEXT, "Product"}, LocaleContextHolder.getLocale()));
 		
 		Optional<Category> category = categoryRepository.findById(id)
 				.map(obj -> Optional.ofNullable(obj))
 				.orElseThrow(() -> new ExceptionObjectNotFound(
-						messageSource.getMessage("error.notFound", new String[] {"Category"}, LocaleContextHolder.getLocale())
+						messageSource.getMessage("error.notFound", new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale())
 				));
 		
 		int result = categoryRepository.setStatusById(Status.DELETED.getDigit(), category.get().getId());
 		if (result < 1) throw new ExceptionInternalServerError(
-				messageSource.getMessage("error.notDeleted", new String[] {"Category"}, LocaleContextHolder.getLocale()));
+				messageSource.getMessage("error.notDeleted", new String[] {CATEGORY_TEXT}, LocaleContextHolder.getLocale()));
 	}
 
 	/**
@@ -155,12 +158,10 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 	public List<CategoryDTO> list() {
 		LOG.info("method: list");
 		
-		List<CategoryDTO> categories = categoryRepository.findByStatus(Status.ACTIVE.getDigit())
+		return categoryRepository.findByStatus(Status.ACTIVE.getDigit())
 				.stream()
 				.map(c -> modelMapper.map(c, CategoryDTO.class))
 				.collect(Collectors.toList());
-		
-		return categories;
 	}
 
 	/**
@@ -212,11 +213,8 @@ public class CategoryService implements ServicePaginatedMethods<CategoryDTO>, Se
 			.map(c -> modelMapper.map(c, CategoryDTO.class))
 			.collect(Collectors.toList());
 		
-		ResponsePaginationAndSortDTO<CategoryDTO> resultData = 
-				new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 
+		return new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 
 						results.getTotalElements(), results.getTotalPages());
-		
-		return resultData;
 	}
 	
 }

@@ -5,6 +5,9 @@
 package com.lsoftware.inventory.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +63,7 @@ class UserRepositoryTest {
 		underTest.save(user);
 		
 		Optional<User> expected = underTest.findByUsername(username);
-		assertThat(expected.isPresent()).isTrue();
+		assertTrue(expected.isPresent());
 		assertThat(expected.get().getId()).isEqualTo(user.getId());
 		assertThat(expected.get().getDocument()).isEqualTo(user.getDocument());
 		assertThat(expected.get().getName()).isEqualTo(user.getName());
@@ -79,7 +82,7 @@ class UserRepositoryTest {
 		String username = "luis3";
 		
 		Optional<User> expected = underTest.findByUsername(username);
-		assertThat(expected.isPresent()).isFalse();
+		assertFalse(expected.isPresent());
 	}
 	
 	
@@ -103,7 +106,7 @@ class UserRepositoryTest {
 		
 		Optional<User> expected = underTest.findByDocumentAndUsernameAndStatus(user.getDocument(), user.getUsername(), 
 				List.of(Status.ACTIVE.getDigit()));
-		assertThat(expected.isPresent()).isTrue();
+		assertTrue(expected.isPresent());
 		assertThat(expected.get().getDocument()).isEqualTo(user.getDocument());
 		assertThat(expected.get().getUsername()).isEqualTo(user.getUsername());
 		assertThat(expected.get().getStatus()).isEqualTo(user.getStatus());
@@ -129,7 +132,7 @@ class UserRepositoryTest {
 		
 		Optional<User> expected = underTest.findByIdAndStatus(user.getId(), 
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()));
-		assertThat(expected.isPresent()).isTrue();
+		assertTrue(expected.isPresent());
 		assertThat(expected.get().getDocument()).isEqualTo(user.getDocument());
 		assertThat(expected.get().getUsername()).isEqualTo(user.getUsername());
 		assertThat(expected.get().getStatus()).isEqualTo(user.getStatus());
@@ -153,7 +156,7 @@ class UserRepositoryTest {
 		
 		Optional<User> expected = underTest.findByIdAndStatus(user.getId(), 
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()));
-		assertThat(expected.isPresent()).isTrue();
+		assertTrue(expected.isPresent());
 		
 		int modified = underTest.setStatusById(Status.INACTIVE.getDigit(), expected.get().getId());
 		assertThat(modified).isEqualTo(1);
@@ -180,7 +183,7 @@ class UserRepositoryTest {
 		
 		Page<User> expected = underTest.findByStatus(List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()), 
 				PageRequest.of(0, 2));
-		assertThat(expected.getContent().size()).isEqualTo(1);
+		assertEquals(1, expected.getContent().size());
 	}
 	
 	
@@ -207,7 +210,7 @@ class UserRepositoryTest {
 		
 		Page<User> expected = underTest.findByTermsContaining("Fa", List.of(Status.ACTIVE.getDigit()), 
 				PageRequest.of(0, 2));
-		assertThat(expected.getContent().size()).isEqualTo(1);
+		assertEquals(1, expected.getContent().size());
 	}
 	
 	
@@ -229,7 +232,7 @@ class UserRepositoryTest {
 		underTest.save(user);
 		
 		Optional<User> expected = underTest.findByUsernameAndStatus(username, Status.ACTIVE.getDigit());
-		assertThat(expected.isPresent()).isTrue();
+		assertTrue(expected.isPresent());
 		assertThat(expected.get().getId()).isEqualTo(user.getId());
 		assertThat(expected.get().getDocument()).isEqualTo(user.getDocument());
 		assertThat(expected.get().getName()).isEqualTo(user.getName());
@@ -256,7 +259,7 @@ class UserRepositoryTest {
 		
 		Optional<User> expected = underTest.findByIdAndStatus(user.getId(), 
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()));
-		assertThat(expected.isPresent()).isTrue();
+		assertTrue(expected.isPresent());
 		
 		int modified = underTest.setPasswordById("12345678", expected.get().getId());
 		assertThat(modified).isEqualTo(1);

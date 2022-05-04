@@ -179,8 +179,7 @@ public class ApiCustomResponse {
 		 * @return the api error
 		 */
 		public ApiCustomResponse build() {
-			ApiCustomResponse user = new ApiCustomResponse(this);
-			return user;
+			return new ApiCustomResponse(this);
 		}
 
 	}

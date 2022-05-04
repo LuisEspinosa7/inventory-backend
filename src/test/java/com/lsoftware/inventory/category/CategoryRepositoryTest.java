@@ -5,6 +5,7 @@
 package com.lsoftware.inventory.category;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +52,7 @@ class CategoryRepositoryTest {
 		underTest.save(cat);
 		
 		Optional<Category> result = underTest.findByNameAndStatus(cat.getName(), cat.getStatus());
-		assertThat(result.isPresent()).isTrue();
+		assertEquals(true, result.isPresent());
 		assertThat(result.get().getName()).isEqualTo(cat.getName());
 		assertThat(result.get().getStatus()).isEqualTo(cat.getStatus());
 	}
@@ -67,7 +68,7 @@ class CategoryRepositoryTest {
 		Category saved = underTest.save(cat);
 		
 		Optional<Category> result = underTest.findByIdAndStatus(saved.getId(), cat.getStatus());
-		assertThat(result.isPresent()).isTrue();
+		assertEquals(true, result.isPresent());
 		assertThat(result.get().getName()).isEqualTo(cat.getName());
 		assertThat(result.get().getStatus()).isEqualTo(cat.getStatus());
 		
@@ -89,8 +90,8 @@ class CategoryRepositoryTest {
 		PageRequest pageable = PageRequest.of(0, 2);
 		
 		Page<Category> result = underTest.findByTermsContaining("C", List.of(Status.ACTIVE.getDigit()), pageable);
-		assertThat(result.getContent().isEmpty()).isFalse();
-		assertThat(result.getContent().size()).isEqualTo(1);
+		assertEquals(false, result.getContent().isEmpty());
+		assertEquals(1, result.getContent().size());
 	}
 	
 	/**
@@ -103,7 +104,7 @@ class CategoryRepositoryTest {
 		underTest.save(new Category(2L, "CATEGORY2", Status.ACTIVE.getDigit()));
 		
 		List<Category> results = underTest.findByStatus(Status.ACTIVE.getDigit());
-		assertThat(results.size()).isEqualTo(2);
+		assertEquals(2, results.size());
 	}
 	
 	/**

@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
 public class UserApplicationPostgresDao implements UserApplicationProviderDao {
 
 	/** The log. */
-	private static Logger LOG = LoggerFactory.getLogger(UserApplicationPostgresDao.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UserApplicationPostgresDao.class);
 
 
 	/** The usuario repository. */

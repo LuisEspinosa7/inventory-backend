@@ -30,6 +30,7 @@ public class JWTConfig {
      * Instantiates a new JWT config.
      */
     public JWTConfig() {
+    	// Nothing here.
     }
 
     /**

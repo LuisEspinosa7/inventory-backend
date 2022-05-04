@@ -6,6 +6,7 @@ package com.lsoftware.inventory.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -104,7 +105,9 @@ class ProductServiceTest {
 		BDDMockito.given(productRepository.findByNameAndStatus(anyString(), anyList()))
 		.willReturn(Optional.of(getProductEntitySaved()));
 		
-		assertThatThrownBy(() -> underTest.add(getProductDTO()))
+		ProductDTO dto = getProductDTO();
+		
+		assertThatThrownBy(() -> underTest.add(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 	
 		verify(productRepository, times(0)).save(any());
@@ -122,7 +125,8 @@ class ProductServiceTest {
 		BDDMockito.given(categoryRepository.findAll())
 		.willReturn(List.of());
 		
-		assertThatThrownBy(() -> underTest.add(getProductDTO()))
+		ProductDTO dto = getProductDTO();
+		assertThatThrownBy(() -> underTest.add(dto))
 		.isInstanceOf(ExceptionObjectNotFound.class);
 	
 		verify(productRepository, times(0)).save(any());
@@ -161,7 +165,9 @@ class ProductServiceTest {
 		BDDMockito.given(productRepository.findByIdAndStatus(anyLong(), anyList()))
 		.willReturn(Optional.empty());
 		
-		assertThatThrownBy(() -> underTest.update(getProductDTO()))
+		ProductDTO dto = getProductDTO();
+		
+		assertThatThrownBy(() -> underTest.update(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 	
 		verify(productRepository, times(0)).save(any());
@@ -180,7 +186,9 @@ class ProductServiceTest {
 		BDDMockito.given(categoryRepository.findAll())
 			.willReturn(getCategoryList());
 		
-		assertThatThrownBy(() -> underTest.update(getProductDTODifferentCategory()))
+		ProductDTO dto = getProductDTODifferentCategory();
+		
+		assertThatThrownBy(() -> underTest.update(dto))
 		.isInstanceOf(ExceptionObjectNotFound.class);
 	
 		verify(productRepository, times(0)).save(any());
@@ -255,7 +263,7 @@ class ProductServiceTest {
 		
 		
 		List<ProductDTO> results = underTest.list();
-		assertThat(results.size()).isEqualTo(2);
+		assertEquals(2, results.size());
 	}
 	
 	
@@ -280,7 +288,7 @@ class ProductServiceTest {
 		request.setPage(0);
 		request.setSize(2);
 		ResponsePaginationAndSortDTO<ProductDTO> results = underTest.findAll(request);
-		assertThat(results.getResult().size()).isEqualTo(2);
+		assertEquals(2, results.getResult().size());
 	}
 	
 	/**
@@ -302,7 +310,7 @@ class ProductServiceTest {
 		request.setPage(0);
 		request.setSize(2);
 		ResponsePaginationAndSortDTO<ProductDTO> results = underTest.findByTermContaining("Val", request);
-		assertThat(results.getResult().size()).isEqualTo(1);
+		assertEquals(1, results.getResult().size());
 	}
 	
 	

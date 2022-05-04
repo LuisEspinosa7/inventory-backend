@@ -4,7 +4,8 @@
  */
 package com.lsoftware.inventory.movement;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,7 @@ class MovementTypeServiceTest {
 	@Test
 	void itShouldListMovementTypes() {
 		List<MovementTypeDTO> list = underTest.list();
-		assertThat(list.size()).isEqualTo(2);
+		assertEquals(2, list.size());
 	}
 
 }

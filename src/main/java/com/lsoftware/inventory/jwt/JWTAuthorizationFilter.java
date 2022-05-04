@@ -37,7 +37,7 @@ import io.jsonwebtoken.Jwts;
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	
 	/** The log. */
-	private static Logger LOG = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 	
 	/** The secret key. */
 	private final SecretKey secretKey;

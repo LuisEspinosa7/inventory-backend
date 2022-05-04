@@ -5,6 +5,7 @@
 package com.lsoftware.inventory.shared.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ class ApiCustomResponseTest {
 		assertThat(error.getStatus()).isEqualTo(403);
 		
 		assertThat(error.getMessage()).isEqualTo(HttpStatus.FORBIDDEN.name());
-		assertThat(error.getPath()).isEqualTo("");
+		assertTrue(error.getPath().isEmpty());
 		assertThat(error.getTimestamp()).isNotNull();
 	}
 

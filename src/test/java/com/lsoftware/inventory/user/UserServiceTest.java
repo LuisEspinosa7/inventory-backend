@@ -6,6 +6,7 @@ package com.lsoftware.inventory.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -41,7 +42,6 @@ import com.lsoftware.inventory.shared.request.RequestPaginationAndSortDTO;
 import com.lsoftware.inventory.shared.response.ResponsePaginationAndSortDTO;
 import com.lsoftware.inventory.shared.status.Status;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UserServiceTest.
  * 
@@ -137,7 +137,8 @@ class UserServiceTest {
 					List.of(new Role(2L, "SUPERVISOR", "ADASDASD"))
 			);
 		
-		assertThatThrownBy(() -> underTest.add(getUserDTO()))
+		UserDTO dto = getUserDTO();
+		assertThatThrownBy(() -> underTest.add(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 	
 		verify(userRepository, times(0)).save(any());
@@ -152,7 +153,8 @@ class UserServiceTest {
 		BDDMockito.given(userRepository.findByDocumentAndUsernameAndStatus(anyString(), anyString(), anyList()))
 		.willReturn(Optional.of(getUserEntitySaved()));
 		
-		assertThatThrownBy(() -> underTest.add(getUserDTO()))
+		UserDTO dto = getUserDTO();
+		assertThatThrownBy(() -> underTest.add(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 		
 		verify(userRepository, times(0)).save(any());
@@ -193,7 +195,8 @@ class UserServiceTest {
 					List.of(new Role(2L, "SUPERVISOR", "ADASDASD"))
 			);
 		
-		assertThatThrownBy(() -> underTest.update(getUserDTO()))
+		UserDTO dto = getUserDTO();
+		assertThatThrownBy(() -> underTest.update(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 
 		verify(userRepository, times(0)).save(any());
@@ -209,7 +212,8 @@ class UserServiceTest {
 		BDDMockito.given(userRepository.findByIdAndStatus(anyLong(), anyList()))
 			.willReturn(Optional.empty());
 		
-		assertThatThrownBy(() -> underTest.update(getUserDTO()))
+		UserDTO dto = getUserDTO();
+		assertThatThrownBy(() -> underTest.update(dto))
 		.isInstanceOf(ExceptionValueNotPermitted.class);
 	
 		verify(userRepository, times(0)).save(any());
@@ -290,7 +294,7 @@ class UserServiceTest {
 		request.setPage(0);
 		request.setSize(2);
 		ResponsePaginationAndSortDTO<UserDTO> results = underTest.findAll(request);
-		assertThat(results.getResult().size()).isEqualTo(2);
+		assertEquals(2, results.getResult().size());
 	}
 	
 	
@@ -314,7 +318,7 @@ class UserServiceTest {
 		request.setPage(0);
 		request.setSize(2);
 		ResponsePaginationAndSortDTO<UserDTO> results = underTest.findByTermContaining("Val", request);
-		assertThat(results.getResult().size()).isEqualTo(1);
+		assertEquals(1, results.getResult().size());
 	}
 	
 	/**
@@ -362,7 +366,8 @@ class UserServiceTest {
 		BDDMockito.given(userRepository.setPasswordById(anyString(), anyLong()))
 			.willReturn(0);
 		
-		assertThatThrownBy(() -> underTest.updatePassword(getUserPasswordDTO()))
+		UserPasswordChangeDTO dto = getUserPasswordDTO();
+		assertThatThrownBy(() -> underTest.updatePassword(dto))
 			.isInstanceOf(ExceptionInternalServerError.class);
 		verify(userRepository, times(1)).setPasswordById(anyString(), anyLong());
 	}
@@ -382,7 +387,9 @@ class UserServiceTest {
 		BDDMockito.given(userRepository.findByUsernameAndStatus(anyString(), anyInt()))
 			.willReturn(Optional.empty());
 		
-		assertThatThrownBy(() -> underTest.updatePassword(getUserPasswordDTO()))
+		
+		UserPasswordChangeDTO dto = getUserPasswordDTO();
+		assertThatThrownBy(() -> underTest.updatePassword(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 		verify(userRepository, times(0)).setPasswordById(anyString(), anyLong());
 	}
@@ -400,7 +407,8 @@ class UserServiceTest {
 		BDDMockito.given(authenticationHolderProvider.provideContextHolder())
 			.willReturn(auth);
 		
-		assertThatThrownBy(() -> underTest.updatePassword(getUserPasswordDTO()))
+		UserPasswordChangeDTO dto = getUserPasswordDTO();
+		assertThatThrownBy(() -> underTest.updatePassword(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 		verify(userRepository, times(0)).setPasswordById(anyString(), anyLong());
 	}
@@ -417,7 +425,8 @@ class UserServiceTest {
 		BDDMockito.given(authenticationHolderProvider.provideContextHolder())
 			.willReturn(auth);
 		
-		assertThatThrownBy(() -> underTest.updatePassword(getUserPasswordDTO()))
+		UserPasswordChangeDTO dto = getUserPasswordDTO();
+		assertThatThrownBy(() -> underTest.updatePassword(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 		verify(userRepository, times(0)).setPasswordById(anyString(), anyLong());
 	}

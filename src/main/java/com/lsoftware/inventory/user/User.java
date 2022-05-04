@@ -84,6 +84,6 @@ public class User implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "permissions", joinColumns = { @JoinColumn(name = "use_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "role_id") })
-	private Set<Role> roles = new HashSet<Role>();
+	private Set<Role> roles = new HashSet<>();
 
 }

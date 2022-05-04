@@ -128,9 +128,11 @@ class MovementServiceTest {
 		BDDMockito.given(productRepository.findByIdAndStatus(anyLong(), anyList()))
 			.willReturn(Optional.of(getCompleteProduct(20)));
 		
-		assertThatThrownBy(() -> underTest.add(getMovementDTO("OUTPUT", 21)))
-			.isInstanceOf(ExceptionValueNotPermitted.class);
+		MovementDTO dto = getMovementDTO("OUTPUT", 21);
 		
+		assertThatThrownBy(() -> underTest.add(dto))
+			.isInstanceOf(ExceptionValueNotPermitted.class);
+				
 		verify(movementRepository, times(0)).save(any());
 	}
 	
@@ -143,7 +145,9 @@ class MovementServiceTest {
 		BDDMockito.given(productRepository.findByIdAndStatus(anyLong(), anyList()))
 			.willReturn(Optional.empty());
 		
-		assertThatThrownBy(() -> underTest.add(getMovementDTO("OUTPUT", 21)))
+		MovementDTO dto = getMovementDTO("OUTPUT", 21);
+		
+		assertThatThrownBy(() -> underTest.add(dto))
 			.isInstanceOf(ExceptionValueNotPermitted.class);
 		
 		verify(movementRepository, times(0)).save(any());

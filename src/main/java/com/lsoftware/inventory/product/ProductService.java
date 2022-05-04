@@ -42,6 +42,12 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 	/** The Constant LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(ProductService.class);
 	
+	/** The Constant PRODUCT_TEXT. */
+	private static final String PRODUCT_TEXT = "Product";
+	
+	/** The Constant ERROR_NOT_FOUND_NAME. */
+	private static final String ERROR_NOT_FOUND_NAME = "error.notFound";
+	
 	/** The product repository. */
 	private ProductRepository productRepository;
 	
@@ -86,7 +92,7 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 						List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()));
 		
 		if (search.isPresent()) throw new ExceptionValueNotPermitted(
-					messageSource.getMessage("error.alreadyExist", new String[] {"Product"}, LocaleContextHolder.getLocale())
+					messageSource.getMessage("error.alreadyExist", new String[] {PRODUCT_TEXT}, LocaleContextHolder.getLocale())
 			);
 		
 		Product product = modelMapper.map(obj, Product.class);
@@ -101,7 +107,7 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 			.filter(c -> c.getId() == obj.getCategory().getId())
 			.findAny()
 			.orElseThrow(() -> new ExceptionObjectNotFound(
-					messageSource.getMessage("error.notFound", new String[] {"Product category "}, LocaleContextHolder.getLocale())
+					messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"Product category "}, LocaleContextHolder.getLocale())
 			));
 		
 		product.setCategory(category);
@@ -124,7 +130,7 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 		Product product = productRepository
 				.findByIdAndStatus(obj.getId(), List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()))
 				.orElseThrow(() -> new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.notFound", new String[] {"Product"}, LocaleContextHolder.getLocale())
+				messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {PRODUCT_TEXT}, LocaleContextHolder.getLocale())
 		));
 		
 		product.setName(obj.getName().toUpperCase());
@@ -136,7 +142,7 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 				.filter(c -> c.getId() == obj.getCategory().getId())
 				.findAny()
 				.orElseThrow(() -> new ExceptionObjectNotFound(
-						messageSource.getMessage("error.notFound", new String[] {"Product category "}, LocaleContextHolder.getLocale())
+						messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"Product category "}, LocaleContextHolder.getLocale())
 				));
 			
 		product.setCategory(category);
@@ -159,12 +165,12 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()))
 				.map(obj -> Optional.ofNullable(obj))
 				.orElseThrow(() -> new ExceptionObjectNotFound(
-						messageSource.getMessage("error.notFound", new String[] {"Product"}, LocaleContextHolder.getLocale())
+						messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {PRODUCT_TEXT}, LocaleContextHolder.getLocale())
 				));
 		
 		int result = productRepository.setStatusById(Status.DELETED.getDigit(), found.get().getId());
 		if (result < 1) throw new ExceptionInternalServerError(
-				messageSource.getMessage("error.notDeleted", new String[] {"Product"}, LocaleContextHolder.getLocale()));
+				messageSource.getMessage("error.notDeleted", new String[] {PRODUCT_TEXT}, LocaleContextHolder.getLocale()));
 	}
 
 	/**
@@ -176,12 +182,10 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 	public List<ProductDTO> list() {
 		LOG.info("method: list");
 		
-		List<ProductDTO> list = productRepository.findByStatus(Status.ACTIVE.getDigit())
+		return productRepository.findByStatus(Status.ACTIVE.getDigit())
 				.stream()
 				.map(c -> modelMapper.map(c, ProductDTO.class))
 				.collect(Collectors.toList());
-		
-		return list;
 	}
 
 	/**
@@ -203,11 +207,8 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 			.map(c -> modelMapper.map(c, ProductDTO.class))
 			.collect(Collectors.toList());
 		
-		ResponsePaginationAndSortDTO<ProductDTO> resultData = 
-				new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 
+		return new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 
 						results.getTotalElements(), results.getTotalPages());
-		
-		return resultData;
 	}
 
 	/**
@@ -233,11 +234,8 @@ public class ProductService implements ServicePaginatedMethods<ProductDTO>, Serv
 			.map(c -> modelMapper.map(c, ProductDTO.class))
 			.collect(Collectors.toList());
 		
-		ResponsePaginationAndSortDTO<ProductDTO> resultData = 
-				new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 
-						results.getTotalElements(), results.getTotalPages());
-		
-		return resultData;
+		return new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 
+						results.getTotalElements(), results.getTotalPages());		
 	}
 	
 }

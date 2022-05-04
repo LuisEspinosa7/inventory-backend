@@ -1,6 +1,8 @@
 package com.lsoftware.inventory.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +54,7 @@ class ProductRepositoryTest {
 		underTest.save(prod);
 		
 		Optional<Product> result = underTest.findByNameAndStatus(prod.getName(), List.of(Status.ACTIVE.getDigit()));;
-		assertThat(result.isPresent()).isTrue();
+		assertEquals(true, result.isPresent());
 		assertThat(result.get().getName()).isEqualTo(prod.getName());
 		assertThat(result.get().getStatus()).isEqualTo(prod.getStatus());
 	}

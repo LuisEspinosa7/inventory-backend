@@ -22,6 +22,7 @@ public class RequestAuthenticationData {
 	 * Instantiates a new username and password authentication request.
 	 */
 	public RequestAuthenticationData() {
+		// Nothing here.
 	}
 
 	/**

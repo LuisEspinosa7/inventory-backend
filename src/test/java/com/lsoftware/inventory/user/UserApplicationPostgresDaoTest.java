@@ -5,6 +5,8 @@
 package com.lsoftware.inventory.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
@@ -58,7 +60,7 @@ class UserApplicationPostgresDaoTest {
 		
 		// then
 		verify(userRepository).findByUsername(Mockito.anyString());
-		assertThat(response.isEmpty()).isTrue();
+		assertTrue(response.isEmpty());
 	}
 	
 	/**
@@ -108,7 +110,7 @@ class UserApplicationPostgresDaoTest {
 		
 		assertThat(response.get().getUsername()).isEqualTo(username);
 		assertThat(response.get().getPassword()).isEqualTo(dbExpected.get().getPassword());
-		assertThat(response.get().getAuthorities().size()).isEqualTo(dbExpected.get().getRoles().size());
+		assertEquals(dbExpected.get().getRoles().size(), response.get().getAuthorities().size());
 		assertThat(response.get().isAccountNonExpired()).isTrue();
 		assertThat(response.get().isAccountNonLocked()).isTrue();
 		assertThat(response.get().isCredentialsNonExpired()).isTrue();

@@ -51,12 +51,10 @@ public class RoleService implements ServiceListMethods<RoleDTO> {
 	public List<RoleDTO> list() {
 		LOG.info("Method: list");
 		
-		List<RoleDTO> roles = roleRepository.findAll()
+		return roleRepository.findAll()
 				.stream()
 				.map(r -> modelMapper.map(r, RoleDTO.class))
 				.collect(Collectors.toList());
-		
-		return roles;
 	}
 
 }

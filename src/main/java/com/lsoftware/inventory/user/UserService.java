@@ -46,6 +46,9 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 	/** The Constant LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 	
+	/** The Constant ERROR_NOT_FOUND_NAME. */
+	private static final String ERROR_NOT_FOUND_NAME = "error.notFound";
+	
 	/** The user repository. */
 	private UserRepository userRepository;
 	
@@ -123,7 +126,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		}
 		
 		if (filtered.isEmpty()) throw new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.notFound", new String[] {"User roles "}, LocaleContextHolder.getLocale())
+				messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User roles "}, LocaleContextHolder.getLocale())
 		);
 		
 		user.setRoles(filtered);
@@ -148,7 +151,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()));
 		
 		if (categoryById.isEmpty()) throw new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.notFound", new String[] {"User"}, LocaleContextHolder.getLocale())
+				messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User"}, LocaleContextHolder.getLocale())
 		);
 		
 		User foundObj = categoryById.get();
@@ -168,7 +171,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 		}
 		
 		if (filtered.isEmpty()) throw new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.notFound", new String[] {"User roles "}, LocaleContextHolder.getLocale())
+				messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User roles "}, LocaleContextHolder.getLocale())
 		);
 		
 		foundObj.setRoles(filtered);
@@ -192,7 +195,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 				List.of(Status.ACTIVE.getDigit(), Status.INACTIVE.getDigit()))
 				.map(obj -> Optional.ofNullable(obj))
 				.orElseThrow(() -> new ExceptionObjectNotFound(
-						messageSource.getMessage("error.notFound", new String[] {"User"}, LocaleContextHolder.getLocale())
+						messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User"}, LocaleContextHolder.getLocale())
 				));
 		
 		int result = userRepository.setStatusById(Status.DELETED.getDigit(), user.get().getId());
@@ -250,11 +253,8 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 			.map(c -> modelMapper.map(c, UserDTO.class))
 			.collect(Collectors.toList());
 		
-		ResponsePaginationAndSortDTO<UserDTO> resultData = 
-				new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 
-						results.getTotalElements(), results.getTotalPages());
-		
-		return resultData;
+		return new ResponsePaginationAndSortDTO<>(mapped, results.getNumber(), 
+						results.getTotalElements(), results.getTotalPages());		
 	}
 
 	/**
@@ -279,7 +279,7 @@ public class UserService implements ServicePaginatedMethods<UserDTO>, ServiceMet
 				.findByUsernameAndStatus(dto.getUsername().toUpperCase(), Status.ACTIVE.getDigit());
 		
 		if (foundUser.isEmpty()) throw new ExceptionValueNotPermitted(
-				messageSource.getMessage("error.notFound", new String[] {"User"}, LocaleContextHolder.getLocale())
+				messageSource.getMessage(ERROR_NOT_FOUND_NAME, new String[] {"User"}, LocaleContextHolder.getLocale())
 		);
 		
 		// It was not possible to validate OLD password

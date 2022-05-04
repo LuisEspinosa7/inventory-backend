@@ -5,6 +5,9 @@
 package com.lsoftware.inventory.authentication.authorities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+//import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
@@ -61,7 +64,7 @@ class AuthoritiesClaimsProviderTest {
 		Claims body = claimsJws.getBody();
 		
 		Set<GrantedAuthority> authorities = underTest.provideGrantedAuthorities(body);
-		assertThat(authorities.size()).isEqualTo(1);
+		assertEquals(1, authorities.size());
 	}
 
 }

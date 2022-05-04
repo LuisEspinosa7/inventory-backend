@@ -26,7 +26,7 @@ import io.jsonwebtoken.Claims;
 public class AuthoritiesClaimsProvider implements AuthoritiesCustomProvider {
 	
 	/** The log. */
-	private static Logger LOG = LoggerFactory.getLogger(AuthoritiesClaimsProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AuthoritiesClaimsProvider.class);
 
 	/**
 	 * Provide granted authorities.
@@ -40,11 +40,9 @@ public class AuthoritiesClaimsProvider implements AuthoritiesCustomProvider {
 		LOG.info("method: provideGrantedAuthorities");
 		List<String> plainAuthorities = (ArrayList<String>) bodyClaims.get("authorities");
 		
-		Set<GrantedAuthority> authorities = plainAuthorities.stream()
+		return plainAuthorities.stream()
 				.map(a -> new SimpleGrantedAuthority("ROLE_" + a))
 				.collect(Collectors.toSet());
-		
-		return authorities;
 	}
 	
 	

@@ -26,7 +26,7 @@
 			**/*.xml
 		</sonar.exclusions>
 		<sonar.coverage.exclusions>
-			**/qualitymeasurementsample/*
+			**/qualitymeasurementsample/*,**/*DTO.java,**/*Config.java,**/User.java,**/Role.java,**/Product.java,**/Movement.java,**/Category.java,**/Status.java
 		</sonar.coverage.exclusions>
 
 	</properties>

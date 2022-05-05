@@ -143,6 +143,19 @@ Some pictures of the project on a local environment respectively:
   </tr>
 </table>
 
+
+<table style="width:100%">
+  <tr>
+    <td>
+  		<img width="450" alt="PostgreSQL Table" src="https://user-images.githubusercontent.com/56041525/166858893-6e33fdbe-88a6-4f1b-921c-b2ff0aefc951.PNG">
+	  </td>
+    <td>
+	<img width="450" alt="Categories" src="https://user-images.githubusercontent.com/56041525/166858999-62fae027-e31f-46f7-af16-cef122849288.PNG">
+    </td>
+  </tr>
+</table>
+
+
 # Want to give it a try? Here you have it Online
 Please don't overuse it, because it is a FREE tier, I wouldn't want to incur in unnecesary expenses :), REMEBER that I've 
 provided the complete POSTMAN collection:

@@ -80,7 +80,7 @@ This project still has no FrontEnd.... But It will soon, of course developed in 
 ## Video
 A video exposing the functionality of the proyect in local environment on a Desktop screen.
 
-https://youtu.be/YXhbBld822g
+https://youtu.be/gGtKy-g_Dpc
 
 ## Development Resources
 I provide the following resources:

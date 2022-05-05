@@ -1,0 +1,16 @@
+
+
+
+java -jar -DSECRET_KEY=securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure -DEXPIRATION_DAYS=800 -DSPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/inventory -DSPRING_DATASOURCE_USERNAME=inventoryadmin -DSPRING_DATASOURCE_PASSWORD=123456 -DSPRING_DATABASE_SCHEMA=app inventory-0.0.1-SNAPSHOT.jar
+
+-Dspring-boot.run.jvmArguments="-Xms2048m -Xmx4096m"
+
+IMPROVED
+
+
+
+java -jar -Dspring-boot.run.jvmArguments="-Xms6144m -Xmx12288m" -DSECRET_KEY=securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure -DEXPIRATION_DAYS=800 -DSPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/inventory -DSPRING_DATASOURCE_USERNAME=inventoryadmin -DSPRING_DATASOURCE_PASSWORD=123456 -DSPRING_DATABASE_SCHEMA=app inventory-0.0.1-SNAPSHOT.jar
+
+
+example1.com
+80
